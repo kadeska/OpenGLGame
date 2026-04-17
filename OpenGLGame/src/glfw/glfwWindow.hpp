@@ -14,7 +14,7 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 
 void processInput(GLFWwindow* window);
 
-namespace LearnOpenGLProj
+namespace OpenGLGame
 {
 
 

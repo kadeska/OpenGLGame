@@ -25,8 +25,8 @@ Scene* scene = nullptr;
 
 Camera* camera = nullptr;// (glm::vec3(0.0f, 0.0f, 3.0f))
 bool firstMouse = true;
-float lastX = LearnOpenGLProj::SCR_WIDTH / 2.0f;
-float lastY = LearnOpenGLProj::SCR_HEIGHT / 2.0f;
+float lastX = OpenGLGame::SCR_WIDTH / 2.0f;
+float lastY = OpenGLGame::SCR_HEIGHT / 2.0f;
 
 // model
 //Model* ourModel = nullptr;
@@ -37,7 +37,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 
-bool LearnOpenGLProj::GlfwWindow::initGlad()
+bool OpenGLGame::GlfwWindow::initGlad()
 {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -47,7 +47,7 @@ bool LearnOpenGLProj::GlfwWindow::initGlad()
     return true;
 }
 
-bool LearnOpenGLProj::GlfwWindow::initGLFW()
+bool OpenGLGame::GlfwWindow::initGLFW()
 {
     if (!glfwInit()) 
     {
@@ -61,7 +61,7 @@ bool LearnOpenGLProj::GlfwWindow::initGLFW()
     return true;
 }
 
-bool LearnOpenGLProj::GlfwWindow::makeShaderProgram()
+bool OpenGLGame::GlfwWindow::makeShaderProgram()
 {
 	std::cout << "Making shader program..." << std::endl;
     myShader = new Shader("vertex.shader", "fragment.shader");
@@ -69,7 +69,7 @@ bool LearnOpenGLProj::GlfwWindow::makeShaderProgram()
     return myShader;
 }
 
-void LearnOpenGLProj::GlfwWindow::render()
+void OpenGLGame::GlfwWindow::render()
 {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -123,12 +123,12 @@ void LearnOpenGLProj::GlfwWindow::render()
     
 }
 
-LearnOpenGLProj::GlfwWindow::GlfwWindow()
+OpenGLGame::GlfwWindow::GlfwWindow()
 {
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 }
 
-bool LearnOpenGLProj::GlfwWindow::create(const char* title, int width, int height)
+bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
 {
 
     initGLFW();
@@ -192,14 +192,14 @@ bool LearnOpenGLProj::GlfwWindow::create(const char* title, int width, int heigh
 	return true;
 }
 
-bool LearnOpenGLProj::GlfwWindow::createScene()
+bool OpenGLGame::GlfwWindow::createScene()
 {
 	scene = new Scene();
 
     return true;
 }
 
-void LearnOpenGLProj::GlfwWindow::startRender()
+void OpenGLGame::GlfwWindow::startRender()
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering. 
 
@@ -228,7 +228,7 @@ void LearnOpenGLProj::GlfwWindow::startRender()
     }
 }
 
-void LearnOpenGLProj::GlfwWindow::destroy()
+void OpenGLGame::GlfwWindow::destroy()
 {
     if (myShader)
     {

@@ -1,4 +1,4 @@
-// LearnOpenGLProj.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// OpenGLGame.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 // This project is a new starting point for making my openGL 3D game. Im not going to be making a game engine, 
 // but instead build the game on top of my own abstraction that is built on OpenGL. OpenGL will be my API choice 
@@ -13,7 +13,7 @@
 
 #include <reactphysics3d/reactphysics3d.h>
 
-LearnOpenGLProj::GlfwWindow m_window;
+OpenGLGame::GlfwWindow m_window;
 
 void endProg()
 {
@@ -61,7 +61,7 @@ int main()
 
     //m_window.createScene();
     
-    if (!m_window.create("Testing OpenGL", LearnOpenGLProj::SCR_WIDTH, LearnOpenGLProj::SCR_HEIGHT)) 
+    if (!m_window.create("Testing OpenGL", OpenGLGame::SCR_WIDTH, OpenGLGame::SCR_HEIGHT)) 
     {
 		std::cout << "Failed to create window" << std::endl;
         return 1;
