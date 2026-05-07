@@ -1,6 +1,5 @@
-
-
 #include <iostream>
+#include <chrono>
 
 #include "glfwWindow.hpp"
 #include "../camera/camera.hpp"
@@ -37,6 +36,13 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 
+// Returns current system time in seconds (high-resolution) as a long double.
+static long double getCurrentSystemTime()
+{
+    using namespace std::chrono;
+    return duration_cast<duration<long double>>(high_resolution_clock::now().time_since_epoch()).count();
+}
+
 bool OpenGLGame::GlfwWindow::initGlad()
 {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -71,33 +77,39 @@ bool OpenGLGame::GlfwWindow::makeShaderProgram()
 
 void OpenGLGame::GlfwWindow::render()
 {
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    // draw our first triangle
-    //glUseProgram(shaderProgram);
-    myShader->use();
-    //glBindVertexArray(VAO); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
-    //glDrawArrays(GL_TRIANGLES, 0, 3);
-
-    // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = camera->GetViewMatrix();
-    myShader->setMat4("projection", projection);
-    myShader->setMat4("view", view);
-
-    // render the loaded model
-    //glm::mat4 model = glm::mat4(1.0f);
-    //model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-    //model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-    //myShader->setMat4("model", model);
-    //ourModel->Draw(myShader);
-
-
-    
-
+    //----------------------------------------------------------------------------------------------------------------------------------
+	// before i can render the scene I need to do physics simulation step and update the models positions based on the physics simulation results. 
+    // This is important because the models positions are used in the vertex shader to render the models in the correct position in the world, 
+    // and they are also used for collision detection and response. If I don't update the models positions based on the physics simulation results, 
+    // then the models will not be rendered in the correct position in the world, and they will not collide with each other correctly. 
+    // So I need to do the physics simulation step before rendering the scene, and I need to update the models positions based on the physics 
+    // simulation results before rendering the scene.
+    //----------------------------------------------------------------------------------------------------------------------------------   
+	
     if ((scene != nullptr) && shouldRender) 
     {
+        if (myShader == nullptr) 
+        {
+			std::cout << "[!Warning!] | GlfwWindow::render() | Shader is nullptr, cannot render!" << std::endl;
+            return;
+        }
+        myShader->use();
+
+        // view/projection transformations
+        glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = camera->GetViewMatrix();
+        myShader->setMat4("projection", projection);
+        myShader->setMat4("view", view);
+
+        // physics simulation -------------------
+		
+        scene->update();
+
+        // render the scene ---------------------
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         // Render all model instances in the models std::vector.
         for (ModelInstance::ModelInstance* modelInstance : scene->getModels())
         {
@@ -199,32 +211,59 @@ bool OpenGLGame::GlfwWindow::createScene()
     return true;
 }
 
+
+// timing helpers for fixed timestep loop
+static long double previousFrameTime = getCurrentSystemTime();
+static long double accumulator = 0.0L;
+
 void OpenGLGame::GlfwWindow::startRender()
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering. 
 
+    // Constant physics time step
+    const float timeStep = 1.0f / 60.0f;
+
+    // Get the current system time
+    long double currentFrameTime = getCurrentSystemTime();
+
+    // Compute the time difference between the two frames
+    long double deltaTime = currentFrameTime - previousFrameTime;
+
+    // Update the previous time
+    previousFrameTime = currentFrameTime;
+
+    // Add the time difference in the accumulator
+    accumulator += deltaTime;
 
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
     {
-        // per-frame time logic
-        // --------------------
-        float currentFrame = static_cast<float>(glfwGetTime());
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        // (Optional) perform fixed-step updates here
+        while (accumulator >= timeStep)
+        {   
+            // render
+            if (shouldRender)
+            {
+                // Update the Dynamics world with a constant time step
+                // and then render
+                render();
+                glfwSwapBuffers(window);
+            }
+
+            // Decrease the accumulated time
+            accumulator -= timeStep;
+        }
 
         // input
         // -----
         processInput(window);
 
-        // render
-        if (shouldRender) 
-        {
-            render();
-            glfwSwapBuffers(window);
-        }
+        
         glfwPollEvents();
+
+        // Add the time difference to the accumulator for fixed-step updates
+        accumulator += timeStep;
     }
 }
 

@@ -11,7 +11,7 @@
 
 #include "src/glfw/glfwWindow.hpp"
 
-#include <reactphysics3d/reactphysics3d.h>
+//#include <reactphysics3d/reactphysics3d.h>
 
 OpenGLGame::GlfwWindow m_window;
 
@@ -28,36 +28,36 @@ int main()
 
     std::cout << "Hello World!\n" << std::endl;
 
-    // First you need to create the PhysicsCommon object.
-    // This is a factory module that you can use to create physics
-    // world and other objects. It is also responsible for
-    // logging and memory management
-    rp3d::PhysicsCommon physicsCommon;
+    //// First you need to create the PhysicsCommon object.
+    //// This is a factory module that you can use to create physics
+    //// world and other objects. It is also responsible for
+    //// logging and memory management
+    //rp3d::PhysicsCommon physicsCommon;
 
-    // Create a physics world
-    rp3d::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+    //// Create a physics world
+    //rp3d::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
 
-    // Create a rigid body in the world
-    rp3d::Vector3 position(0, 20, 0);
-    rp3d::Quaternion orientation = rp3d::Quaternion::identity();
-    rp3d::Transform transform(position, orientation);
-    rp3d::RigidBody* body = world->createRigidBody(transform);
+    //// Create a rigid body in the world
+    //rp3d::Vector3 position(0, 20, 0);
+    //rp3d::Quaternion orientation = rp3d::Quaternion::identity();
+    //rp3d::Transform transform(position, orientation);
+    //rp3d::RigidBody* body = world->createRigidBody(transform);
 
-    const rp3d::decimal timeStep = 1.0f / 60.0f;
+    //const rp3d::decimal timeStep = 1.0f / 60.0f;
 
-    // Step the simulation a few steps
-    for (int i = 0; i < 20; i++) {
+    //// Step the simulation a few steps
+    //for (int i = 0; i < 20; i++) {
 
-        world->update(timeStep);
+    //    world->update(timeStep);
 
-        // Get the updated position of the body
-        const rp3d::Transform& transform = body->getTransform();
-        const rp3d::Vector3& position = transform.getPosition();
+    //    // Get the updated position of the body
+    //    const rp3d::Transform& transform = body->getTransform();
+    //    const rp3d::Vector3& position = transform.getPosition();
 
-        // Display the position of the body
-        std::cout << "Body Position: (" << position.x << ", " <<
-            position.y << ", " << position.z << ")" << std::endl;
-    }
+    //    // Display the position of the body
+    //    std::cout << "Body Position: (" << position.x << ", " <<
+    //        position.y << ", " << position.z << ")" << std::endl;
+    //}
 
     //m_window.createScene();
     

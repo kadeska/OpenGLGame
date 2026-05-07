@@ -33,6 +33,12 @@
     <ClCompile Include="src\utils\FileManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\physics\RigidBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\PhysicsWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\glfw\glfwIncludes.hpp">
@@ -65,6 +71,15 @@
     <ClInclude Include="src\utils\FileManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\ModelDataLoader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\RigidBody.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\PhysicsWorld.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaderScr\fragment.shader" />
@@ -72,5 +87,6 @@
     <None Include="vertex.shader" />
     <None Include="fragment.shader" />
     <None Include="assimp-vc143-mtd.dll" />
+    <None Include="..\README.md" />
   </ItemGroup>
 </Project>

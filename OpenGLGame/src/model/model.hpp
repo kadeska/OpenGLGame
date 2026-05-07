@@ -82,6 +82,7 @@ private:
             std::cout << "INFO::FILEMANAGER:: Model data folder already exists. Checking for files..." << std::endl;
             //FileManager::checkForModelDataFiles(path);
             //FileManager::loadDataFile(path);
+            //FileManager::checkForModelDataFiles("");
         }
         if(result == 0)
         {
