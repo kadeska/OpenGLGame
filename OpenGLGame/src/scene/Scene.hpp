@@ -17,6 +17,6 @@ public:
 
 	void populateScene();
 	// this is where the physics simulation step would go, and then we would update the models positions based on the physics simulation results.
-	void update();
+	void update(const double dt);
 };
 

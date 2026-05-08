@@ -9,7 +9,7 @@ public:
 	reactphysics3d::PhysicsWorld* getWorld();
 
 
-	void update();
+	void update(const double dt);
 
 	// Correctly override the pure virtual from reactphysics3d::CollisionCallback
 	virtual void onContact(const reactphysics3d::CollisionCallback::CallbackData& callbackData) override;

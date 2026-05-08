@@ -75,7 +75,7 @@ bool OpenGLGame::GlfwWindow::makeShaderProgram()
     return myShader;
 }
 
-void OpenGLGame::GlfwWindow::render()
+void OpenGLGame::GlfwWindow::render(const double dt)
 {
     //----------------------------------------------------------------------------------------------------------------------------------
 	// before i can render the scene I need to do physics simulation step and update the models positions based on the physics simulation results. 
@@ -103,7 +103,7 @@ void OpenGLGame::GlfwWindow::render()
 
         // physics simulation -------------------
 		
-        scene->update();
+        scene->update(dt);
 
         // render the scene ---------------------
 
@@ -218,52 +218,48 @@ static long double accumulator = 0.0L;
 
 void OpenGLGame::GlfwWindow::startRender()
 {
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering. 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering.
 
-    // Constant physics time step
-    const float timeStep = 1.0f / 60.0f;
+    const double dt = 0.01;
+    double currentTime = getCurrentSystemTime();
+    double accumulator = 0.0;
 
-    // Get the current system time
-    long double currentFrameTime = getCurrentSystemTime();
-
-    // Compute the time difference between the two frames
-    long double deltaTime = currentFrameTime - previousFrameTime;
-
-    // Update the previous time
-    previousFrameTime = currentFrameTime;
-
-    // Add the time difference in the accumulator
-    accumulator += deltaTime;
-
-    // render loop
-    // -----------
     while (!glfwWindowShouldClose(window))
     {
-        // (Optional) perform fixed-step updates here
-        while (accumulator >= timeStep)
-        {   
-            // render
-            if (shouldRender)
-            {
-                // Update the Dynamics world with a constant time step
-                // and then render
-                render();
-                glfwSwapBuffers(window);
-            }
+        double newTime = getCurrentSystemTime();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
 
-            // Decrease the accumulated time
-            accumulator -= timeStep;
+        // avoid spiral of death after pauses/hangs
+        if (frameTime > 0.25)
+            frameTime = 0.25;
+
+        accumulator += frameTime;
+
+        // Fixed-step updates (physics simulation should be performed here if desired)
+        while (accumulator >= dt)
+        {
+            // If you want fixed-step physics updates, call scene->update() here.
+            // Note: render() currently calls scene->update() as well, so avoid double-updating if you move it here.
+            // if (scene) scene->update();
+
+            accumulator -= dt;
         }
 
+        // update deltaTime used for camera movement/input
+        deltaTime = static_cast<float>(frameTime);
+
         // input
-        // -----
         processInput(window);
 
-        
-        glfwPollEvents();
+        // render the frame (render() will perform its own scene update if present)
+        if (shouldRender)
+        {
+            render(dt);
+            glfwSwapBuffers(window);
+        }
 
-        // Add the time difference to the accumulator for fixed-step updates
-        accumulator += timeStep;
+        glfwPollEvents();
     }
 }
 

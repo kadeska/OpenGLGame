@@ -55,11 +55,11 @@ void Scene::populateScene()
 }
 
 // physics sim 
-void Scene::update()
+void Scene::update(const double dt)
 {
 	// Update physics simulation once per frame
 	if (physicsWorld) {
-		physicsWorld->update();
+		physicsWorld->update(dt);
 	}
 
 	// Then update model positions based on physics results

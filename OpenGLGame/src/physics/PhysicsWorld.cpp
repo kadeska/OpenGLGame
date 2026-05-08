@@ -41,16 +41,16 @@ reactphysics3d::PhysicsWorld* PhysicsWorld::getWorld()
     return world;
 }
 int y = 0;
-void PhysicsWorld::update()
+void PhysicsWorld::update(const double dt)
 {
 	std::cout << "Updating physics world." << std::endl;
-
+    world->update(dt);
     // Use a CollisionCallback reference as required by the API
-    if (world && callbackptr) {
-		world->getRigidBody(0)->setTransform(rp3d::Transform(rp3d::Vector3(0, y--, 0), rp3d::Quaternion::identity()));
-        world->testCollision(*callbackptr);
-        std::cout << "Rigid body Y position: " << world->getRigidBody(0)->getTransform().getPosition().y << std::endl;
-    }
+  //  if (world && callbackptr) {
+		//world->getRigidBody(0)->setTransform(rp3d::Transform(rp3d::Vector3(0, y--, 0), rp3d::Quaternion::identity()));
+  //      world->testCollision(*callbackptr);
+  //      std::cout << "Rigid body Y position: " << world->getRigidBody(0)->getTransform().getPosition().y << std::endl;
+  //  }
 }
 
 void PhysicsWorld::onContact(const reactphysics3d::CollisionCallback::CallbackData& callbackData)
