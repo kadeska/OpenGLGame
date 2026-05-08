@@ -88,22 +88,4 @@ void Scene::updatePhysicsWorld(const double timestep)
 	}
 
 	physicsWorld->getWorld()->update(timestep);
-
-	// testing
-
-	for (ModelInstance::ModelInstance* modInst : models) 
-	{
-		// Get the updated position of the body
-		const rp3d::Transform& transform = modInst->rigidBody->getRigidBodyPtr()->getTransform();
-		const rp3d::Vector3& position = transform.getPosition();
-
-		modInst->position = glm::vec3(position.x, position.y, position.z);
-
-		// Display the position of the body
-		std::cout << "Body Position: (" << position.x << ", " <<
-			position.y << ", " << position.z << ")" << std::endl;
-	}
-
-	
-
 }

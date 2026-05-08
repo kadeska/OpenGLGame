@@ -20,11 +20,12 @@ PhysicsWorld::PhysicsWorld()
     
     settings.defaultVelocitySolverNbIterations = 20;
     settings.isSleepingEnabled = false;
-    settings.gravity = rp3d::Vector3(0, -500, 0);
+    settings.gravity = rp3d::Vector3(0, -0.3, 0);
 
     // Create a physics world with our settings
     world = physicsCommon.createPhysicsWorld(settings);
     world->setIsGravityEnabled(true);
+	world->setGravity(settings.gravity);
     
     // default shape
 

@@ -24,8 +24,9 @@ RigidBody::RigidBody(rp3d::Vector3 position, rp3d::PhysicsWorld* world)
 	// Create a rigid body in the world
 	rigidBodyPtr = world->createRigidBody(transform);
 	rigidBodyPtr->setType(rp3d::BodyType::DYNAMIC);
-	rigidBodyPtr->setMass(10.0f);
+	rigidBodyPtr->setMass(0.001f);
 	rigidBodyPtr->enableGravity(true);
+	rigidBodyPtr->setLinearDamping(0.9f);
 }
 
 void RigidBody::move(rp3d::Vector3 newPosition)

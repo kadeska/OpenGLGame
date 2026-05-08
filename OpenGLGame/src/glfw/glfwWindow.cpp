@@ -221,38 +221,66 @@ void OpenGLGame::GlfwWindow::startRender()
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering.
 
-    const double timestep = 0.01;
-    double currentTime = getCurrentSystemTime();
-    double accumulator = 0.0;
-
     while (!glfwWindowShouldClose(window))
     {
-        double newTime = getCurrentSystemTime();
-        double frameTime = newTime - currentTime;
-        currentTime = newTime;
+        // Constant physics time step
+        const float timestep = 1.0f / 60.0f;
 
-        // avoid spiral of death after pauses/hangs
-        if (frameTime > 0.25)
-            frameTime = 0.25;
+        // Get the current system time
+        long double currentFrameTime = getCurrentSystemTime();
 
-        accumulator += frameTime;
+        // Compute the time difference between the two frames
+        long double frameDeltaTime = currentFrameTime - previousFrameTime;
+        previousFrameTime = currentFrameTime;
 
-        // Fixed-step updates (physics simulation should be performed here if desired)
+        // Add the time difference in the accumulator
+        accumulator += frameDeltaTime;
+
         while (accumulator >= timestep)
         {
-            // If you want fixed-step physics updates, call scene->update() here.
-            // Note: render() currently calls scene->update() as well, so avoid double-updating if you move it here.
-            // if (scene) scene->update();
-
             // update the physics world.
             // This function will perform the physics simulation step.
             scene->updatePhysicsWorld(timestep);
 
             accumulator -= timestep;
         }
+        // Compute the time interpolation factor
+        float factor = accumulator / timestep;
+
+        for (ModelInstance::ModelInstance* modInst : scene->getModels())
+        {
+			// physics sim step has been compleated at this point, but we still need to update the models positions based on the physics simulation results, and we also need to compute the interpolated transform of the rigid body for rendering.
+            // 
+			// get the previous position of the body before updating it with the physics simulation results, this is needed for interpolation.
+
+            rp3d::Transform prevTransform;
+			prevTransform.setPosition(rp3d::Vector3(modInst->position.x, modInst->position.y, modInst->position.z));
+
+
+            // Get the current position of the rigid body that was calculated by the physics sim step.
+
+			// this transform is the one that is updated by the physics simulation step, so it will have the new position and orientation of the body after the physics simulation step.
+            const rp3d::Transform& currTransform = modInst->rigidBody->getRigidBodyPtr()->getTransform();
+            const rp3d::Vector3& position = currTransform.getPosition();
+
+            //modInst->position = glm::vec3(position.x, position.y, position.z);
+
+            // Compute the interpolated transform of the rigid body
+            rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevTransform, currTransform, factor);
+
+            // now update the model instance position with the interpolated transform position for rendering.
+			modInst->position = glm::vec3(interpolatedTransform.getPosition().x, interpolatedTransform.getPosition().y, interpolatedTransform.getPosition().z);
+
+            // Display the position of the body
+            //std::cout << "Body Position: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
+        }
+
+        // Now you can render your body using the new transform
+
+        
 
         // update deltaTime used for camera movement/input
-        deltaTime = static_cast<float>(frameTime);
+        deltaTime = static_cast<float>(frameDeltaTime);
 
         // input
         processInput(window);
