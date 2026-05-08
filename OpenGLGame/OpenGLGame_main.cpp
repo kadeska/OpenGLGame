@@ -27,39 +27,6 @@ int main()
     std::atexit(endProg);
 
     std::cout << "Hello World!\n" << std::endl;
-
-    //// First you need to create the PhysicsCommon object.
-    //// This is a factory module that you can use to create physics
-    //// world and other objects. It is also responsible for
-    //// logging and memory management
-    //rp3d::PhysicsCommon physicsCommon;
-
-    //// Create a physics world
-    //rp3d::PhysicsWorld* world = physicsCommon.createPhysicsWorld();
-
-    //// Create a rigid body in the world
-    //rp3d::Vector3 position(0, 20, 0);
-    //rp3d::Quaternion orientation = rp3d::Quaternion::identity();
-    //rp3d::Transform transform(position, orientation);
-    //rp3d::RigidBody* body = world->createRigidBody(transform);
-
-    //const rp3d::decimal timeStep = 1.0f / 60.0f;
-
-    //// Step the simulation a few steps
-    //for (int i = 0; i < 20; i++) {
-
-    //    world->update(timeStep);
-
-    //    // Get the updated position of the body
-    //    const rp3d::Transform& transform = body->getTransform();
-    //    const rp3d::Vector3& position = transform.getPosition();
-
-    //    // Display the position of the body
-    //    std::cout << "Body Position: (" << position.x << ", " <<
-    //        position.y << ", " << position.z << ")" << std::endl;
-    //}
-
-    //m_window.createScene();
     
     if (!m_window.create("Testing OpenGL", OpenGLGame::SCR_WIDTH, OpenGLGame::SCR_HEIGHT)) 
     {
@@ -74,23 +41,5 @@ int main()
 
     m_window.startRender();
 
-
-    //m_window.destroy();
-    //glfwTerminate();
-    
-
-    //std::cout << "[END] Press Enter key to exit...\n" << std::cin.get();
-
     return 0;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

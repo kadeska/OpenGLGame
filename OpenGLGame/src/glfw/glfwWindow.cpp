@@ -75,8 +75,9 @@ bool OpenGLGame::GlfwWindow::makeShaderProgram()
     return myShader;
 }
 
-void OpenGLGame::GlfwWindow::render(const double dt)
+void OpenGLGame::GlfwWindow::render()
 {
+    // Physics sim step has been moved to the scene class.
     //----------------------------------------------------------------------------------------------------------------------------------
 	// before i can render the scene I need to do physics simulation step and update the models positions based on the physics simulation results. 
     // This is important because the models positions are used in the vertex shader to render the models in the correct position in the world, 
@@ -102,8 +103,8 @@ void OpenGLGame::GlfwWindow::render(const double dt)
         myShader->setMat4("view", view);
 
         // physics simulation -------------------
-		
-        scene->update(dt);
+		// moved to the scene class
+        //scene->update(dt);
 
         // render the scene ---------------------
 
@@ -220,7 +221,7 @@ void OpenGLGame::GlfwWindow::startRender()
 {
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering.
 
-    const double dt = 0.01;
+    const double timestep = 0.01;
     double currentTime = getCurrentSystemTime();
     double accumulator = 0.0;
 
@@ -237,13 +238,17 @@ void OpenGLGame::GlfwWindow::startRender()
         accumulator += frameTime;
 
         // Fixed-step updates (physics simulation should be performed here if desired)
-        while (accumulator >= dt)
+        while (accumulator >= timestep)
         {
             // If you want fixed-step physics updates, call scene->update() here.
             // Note: render() currently calls scene->update() as well, so avoid double-updating if you move it here.
             // if (scene) scene->update();
 
-            accumulator -= dt;
+            // update the physics world.
+            // This function will perform the physics simulation step.
+            scene->updatePhysicsWorld(timestep);
+
+            accumulator -= timestep;
         }
 
         // update deltaTime used for camera movement/input
@@ -255,7 +260,7 @@ void OpenGLGame::GlfwWindow::startRender()
         // render the frame (render() will perform its own scene update if present)
         if (shouldRender)
         {
-            render(dt);
+            render();
             glfwSwapBuffers(window);
         }
 

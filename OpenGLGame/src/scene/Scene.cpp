@@ -49,32 +49,61 @@ void Scene::populateScene()
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(8.0f, 10.0f, 0.0f), glm::vec3(1.0f)));
 
 
-
+	//physicsWorld->getWorld()->
 
 
 }
 
 // physics sim 
-void Scene::update(const double dt)
+//void Scene::update(const double dt)
+//{
+//	// Update physics simulation once per frame
+//	if (physicsWorld) {
+//		physicsWorld->update(dt);
+//	}
+//
+//	// Then update model positions based on physics results
+//	for (ModelInstance::ModelInstance* modInst : models) 
+//	{
+//		if (modInst && modInst->rigidBody) {
+//			// Get the updated position from the rigid body after physics simulation
+//			//const rp3d::Transform& transform = modInst->rigidBody->transform;
+//			//const rp3d::Vector3& newPos = transform.getPosition();
+//			//modInst->position = glm::vec3(newPos.x, newPos.y, newPos.z);
+//			//modInst->rigidBody->move(newPos);
+//
+//			modInst->position = glm::vec3(modInst->rigidBody->transform.getPosition().x, modInst->rigidBody->transform.getPosition().y, modInst->rigidBody->transform.getPosition().z);
+//
+//			std::cout << "Updated model position to: (" << modInst->position.x << ", " << modInst->position.y << ", " << modInst->position.z << ")" << std::endl;
+//		}
+//	}
+//}
+
+void Scene::updatePhysicsWorld(const double timestep)
 {
-	// Update physics simulation once per frame
-	if (physicsWorld) {
-		physicsWorld->update(dt);
-	}
-
-	// Then update model positions based on physics results
-	for (auto* modInst : models) 
+	if (physicsWorld == nullptr) 
 	{
-		if (modInst && modInst->rigidBody) {
-			// Get the updated position from the rigid body after physics simulation
-			//const rp3d::Transform& transform = modInst->rigidBody->transform;
-			//const rp3d::Vector3& newPos = transform.getPosition();
-			//modInst->position = glm::vec3(newPos.x, newPos.y, newPos.z);
-			//modInst->rigidBody->move(newPos);
-
-			modInst->position = glm::vec3(modInst->rigidBody->transform.getPosition().x, modInst->rigidBody->transform.getPosition().y, modInst->rigidBody->transform.getPosition().z);
-
-			std::cout << "Updated model position to: (" << modInst->position.x << ", " << modInst->position.y << ", " << modInst->position.z << ")" << std::endl;
-		}
+		std::cout << "ERROR : physics world is nullptr" << std::endl;
+		return;
 	}
+
+	physicsWorld->getWorld()->update(timestep);
+
+	// testing
+
+	for (ModelInstance::ModelInstance* modInst : models) 
+	{
+		// Get the updated position of the body
+		const rp3d::Transform& transform = modInst->rigidBody->getRigidBodyPtr()->getTransform();
+		const rp3d::Vector3& position = transform.getPosition();
+
+		modInst->position = glm::vec3(position.x, position.y, position.z);
+
+		// Display the position of the body
+		std::cout << "Body Position: (" << position.x << ", " <<
+			position.y << ", " << position.z << ")" << std::endl;
+	}
+
+	
+
 }

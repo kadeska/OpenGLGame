@@ -10,6 +10,7 @@ public:
 	RigidBody(rp3d::Vector3 position, rp3d::PhysicsWorld* world);
 	~RigidBody() = default;
 	void move(rp3d::Vector3 newPosition);
+	rp3d::RigidBody* getRigidBodyPtr();
 
 };
 

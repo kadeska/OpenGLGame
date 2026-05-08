@@ -54,7 +54,7 @@ namespace OpenGLGame
 		bool initGLFW();
 		bool makeShaderProgram();
 		// this function calls the render functions for all the models
-		void render(const double dt);
+		void render();
 		
 	};
 }

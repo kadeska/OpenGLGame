@@ -35,3 +35,13 @@ void RigidBody::move(rp3d::Vector3 newPosition)
 
 	rigidBodyPtr->setTransform(rp3d::Transform(newPosition, rp3d::Quaternion::identity()));
 }
+
+rp3d::RigidBody* RigidBody::getRigidBodyPtr()
+{
+	if (rigidBodyPtr == nullptr) 
+	{
+		std::cerr << "Error: Rigid body pointer is null." << std::endl;
+		return nullptr;
+	}
+	return rigidBodyPtr;
+}
