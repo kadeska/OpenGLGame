@@ -193,6 +193,8 @@ bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
     //    return false;
     //}
 
+    // TODO: move this outside to a scene manager class.
+    // 
     //create a scene
     createScene();
 

@@ -144,6 +144,7 @@
     <ClCompile Include="OpenGLGame_main.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\glfw\glfwWindow.cpp" />
+    <ClCompile Include="src\model\ModelFactory.cpp" />
     <ClCompile Include="src\physics\PhysicsWorld.cpp" />
     <ClCompile Include="src\physics\RigidBody.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="src\glfw\glfwWindow.hpp" />
     <ClInclude Include="src\model\mesh\mesh.hpp" />
     <ClInclude Include="src\model\model.hpp" />
+    <ClInclude Include="src\model\ModelFactory.hpp" />
     <ClInclude Include="src\model\ModelInstance.hpp" />
     <ClInclude Include="src\physics\PhysicsWorld.hpp" />
     <ClInclude Include="src\physics\RigidBody.hpp" />
