@@ -1,5 +1,6 @@
 # OpenGLGame
 This project is a rewrite of my last OpenGL project. This project will be my focus for making my 3d game. This project is focusing on making a game itself, not a seperate engine. 
+Although I may develop some sort of tools for developing the game once I get established with building the game itself, after finishing the foundational things like model loading, world generation and saving, UI features, inventory, and probably more. 
 
 # About
 I have gotten the basics of 3d rendering understood now with the help of LearnOpenGL.com. I currently have only compleated the 'Getting Started' and the 'Model Loading' chapters. 
