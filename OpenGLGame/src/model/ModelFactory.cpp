@@ -1,9 +1,9 @@
 #include "ModelFactory.hpp"
 
 //#include <stb_image/stb_image.h>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
+//#include <assimp/postprocess.h>
 #include <filesystem>
 
 #include "../utils/FileManager.hpp"
@@ -262,36 +262,36 @@ void ModelFactory::loadModel(std::string const& path)
     }
 }
 
-std::vector<Texture> ModelFactory::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
-{
-    std::vector<Texture> textures;
-    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
-    {
-        aiString str;
-        mat->GetTexture(type, i, &str);
-        // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
-        bool skip = false;
-        for (unsigned int j = 0; j < modelData.textures_loaded.size(); j++)
-        {
-            if (std::strcmp(modelData.textures_loaded[j].path.data(), str.C_Str()) == 0)
-            {
-                textures.push_back(modelData.textures_loaded[j]);
-                skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
-                break;
-            }
-        }
-        if (!skip)
-        {   // if texture hasn't been loaded already, load it
-            Texture texture;
-            texture.id = TextureFromFile(str.C_Str(), directory, false);
-            texture.type = typeName;
-            texture.path = str.C_Str();
-            textures.push_back(texture);
-            modelData.textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
-        }
-    }
-    return textures;
-}
+//std::vector<Texture> ModelFactory::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
+//{
+//    std::vector<Texture> textures;
+//    for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
+//    {
+//        aiString str;
+//        mat->GetTexture(type, i, &str);
+//        // check if texture was loaded before and if so, continue to next iteration: skip loading a new texture
+//        bool skip = false;
+//        for (unsigned int j = 0; j < modelData.textures_loaded.size(); j++)
+//        {
+//            if (std::strcmp(modelData.textures_loaded[j].path.data(), str.C_Str()) == 0)
+//            {
+//                textures.push_back(modelData.textures_loaded[j]);
+//                skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
+//                break;
+//            }
+//        }
+//        if (!skip)
+//        {   // if texture hasn't been loaded already, load it
+//            Texture texture;
+//            texture.id = TextureFromFile(str.C_Str(), directory, false);
+//            texture.type = typeName;
+//            texture.path = str.C_Str();
+//            textures.push_back(texture);
+//            modelData.textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
+//        }
+//    }
+//    return textures;
+//}
 
 unsigned int ModelFactory::TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {

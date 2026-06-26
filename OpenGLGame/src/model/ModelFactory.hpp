@@ -53,7 +53,7 @@ private:
 
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.
-	std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
+	//std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma);
 
 	// --- parseModelDataFolder: build one MeshData per file, initialize locals, and return results ---

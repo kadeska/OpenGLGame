@@ -4,9 +4,14 @@
 rp3d::RigidBody* rigidBodyPtr;
 rp3d::SphereShape* sphereShape;    // store shapes so you can destroy later
 
-RigidBody::RigidBody(rp3d::Vector3 position, rp3d::PhysicsWorld* world)
+int modelPtrIndex;
+
+RigidBody::RigidBody(rp3d::Vector3 position, rp3d::PhysicsWorld* world, int model_ptr_index)
 {
 	std::cout << "Initializing rigid body.\n";
+
+	modelPtrIndex = model_ptr_index;
+
 	// Initial position and orientation of the rigid body
 	//rp3d::Vector3 pos(0.0, 3.0, 0.0);
 	rp3d::Quaternion orientation = rp3d::Quaternion::identity();

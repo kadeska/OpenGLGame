@@ -31,8 +31,11 @@ namespace ModelInstance
 			// createModel function should take a name of the model, and find the model data folder with that name, 
             // and load the mesh data files from that folder to construct the model object.
 			model = modelFactory.createModel("backpack");
+            model->position = position;
 
-			rigidBody = new RigidBody(rp3d::Vector3(position.x, position.y, position.z), physicsWorldptr);
+            
+
+			rigidBody = new RigidBody(rp3d::Vector3(position.x, position.y, position.z), physicsWorldptr, model->getPtrIndex());
         }
 
         ~ModelInstance()

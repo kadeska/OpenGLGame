@@ -73,12 +73,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs;C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs\react3dDebug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs;C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs\react3dDebug;C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs\react3dRelease;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LibraryPath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs;C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs\react3dRelease;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\includes;$(IncludePath)</IncludePath>
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>
+    </LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -121,6 +122,8 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,8 +140,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mtd.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

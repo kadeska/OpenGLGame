@@ -7,7 +7,7 @@ class RigidBody
 	// initialize a new rigid body with the given parameters.
 public:
 	rp3d::Transform transform;
-	RigidBody(rp3d::Vector3 position, rp3d::PhysicsWorld* world);
+	RigidBody(rp3d::Vector3 position, rp3d::PhysicsWorld* world, int model_ptr_index);
 	~RigidBody() = default;
 	void move(rp3d::Vector3 newPosition);
 	rp3d::RigidBody* getRigidBodyPtr();

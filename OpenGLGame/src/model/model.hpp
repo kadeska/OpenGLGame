@@ -4,8 +4,8 @@
 #include <iostream>
 #include <vector>
 #include <stb_image/stb_image.h>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
+//#include <assimp/Importer.hpp>
+//#include <assimp/scene.h>
 
 #include "mesh/mesh.hpp"
 
@@ -35,6 +35,9 @@ public:
 	std::string directory; // the directory path
 	std::string modelName; // the model name (filename without extension)
     bool gammaCorrection = false;
+
+	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	//bool loadSuccessful;
 
     ModelData modelData;
