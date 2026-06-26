@@ -5,8 +5,7 @@
 
 #include <glad/glad.h> // holds all OpenGL type declarations
 
-//#include <glm/glm.hpp>
-//#include <glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 #include "../../shader.hpp"
 
@@ -45,19 +44,33 @@ public:
     unsigned int VAO;
 
     // constructor
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
-    {
-        this->vertices = vertices;
-        this->indices = indices;
-        this->textures = textures;
+	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+	{
+		this->vertices = vertices;
+		this->indices = indices;
+		this->textures = textures;
 
-        // now that we have all the required data, set the vertex buffers and its attribute pointers.
-        setupMesh();
-    }
+		// now that we have all the required data, set the vertex buffers and its attribute pointers.
+		setupMesh();
+	}
+	Mesh() = default;
+
+	// Public method to setup mesh after data has been populated
+	void setupMeshData()
+	{
+		setupMesh();
+	}
 
     // render the mesh
     void Draw(Shader* shader)
     {
+        // Debug output
+        //static bool logged = false;
+        //if (!logged) {
+        //    std::cout << "DEBUG::Mesh::Draw() called. Meshes to render: " << textures.size() << ", Indices: " << indices.size() << std::endl;
+        //    logged = true;
+        //}
+
         // bind appropriate textures
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
@@ -86,6 +99,7 @@ public:
 
         // draw mesh
         glBindVertexArray(VAO);
+        //std::cout << "DEBUG::Mesh::Draw() - Drawing " << indices.size() << " indices" << std::endl;
         glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
         glBindVertexArray(0);
 

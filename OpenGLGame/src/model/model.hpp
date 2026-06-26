@@ -13,9 +13,9 @@
 // the necessary data needed to render
 struct ModelData
 {
-    std::vector<Texture> textures_loaded = {};
-    std::vector<Mesh> meshes = {};
-    std::string modelName = "";
+    std::vector<Texture> textures_loaded = std::vector<Texture>(100);
+    std::vector<Mesh> meshes = std::vector<Mesh>(1000);
+    std::string modelName = "null";
 };
 
 
@@ -52,6 +52,8 @@ public:
             std::cout << "INFO::MODEL:: Meshes provided in model data, loading model data from provided data..." << std::endl;
             this->modelData.meshes = _modelData.meshes;
             this->modelData.textures_loaded = _modelData.textures_loaded;
+			this->modelData.modelName = _modelData.modelName;
+			this->modelName = _modelData.modelName;
         }
     }
 

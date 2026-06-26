@@ -141,6 +141,7 @@ OpenGLGame::GlfwWindow::GlfwWindow()
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
 }
 
+// this gets called by the main function and creates the window and context.
 bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
 {
 

@@ -82,7 +82,7 @@ namespace ModelDataLoader
 				}
 			}
 		}
-
+		return false;
 	}
 
 	bool parseLine(std::string_view s) 

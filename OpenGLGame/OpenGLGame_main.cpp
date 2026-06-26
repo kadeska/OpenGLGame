@@ -22,12 +22,14 @@ void endProg()
     std::cout << "[END] Press Enter key to exit...\n" << std::cin.get();
 }
 
+// entry point
 int main()
 {
     std::atexit(endProg);
 
     std::cout << "Hello World!\n" << std::endl;
     
+    // create a window and openGL context
     if (!m_window.create("Testing OpenGL", OpenGLGame::SCR_WIDTH, OpenGLGame::SCR_HEIGHT)) 
     {
 		std::cout << "Failed to create window" << std::endl;
@@ -38,7 +40,7 @@ int main()
 	// what is a scene? a scene is a collection of models, lights, and other objects that make up the game world.
     //m_window.createScene();
     
-
+    // start the main loop
     m_window.startRender();
 
     return 0;

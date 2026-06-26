@@ -4,10 +4,12 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <filesystem>
 
 #include "../utils/FileManager.hpp"
 
 #include "../utils/ModelDataLoader.hpp"
+#include "mesh/mesh.hpp"
 
 
 bool testing = false;
@@ -24,6 +26,11 @@ bool loadSuccessful = false;
 std::string directory = "";
 
 std::string folderName = "";
+
+
+typedef std::vector<std::optional<std::tuple<double, double, double>>> MeshResult;
+
+
 
 
 std::vector<Model*> ModelFactory::getLoadedModels()
@@ -74,7 +81,8 @@ Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
     // model data was not found. Need to load from 3d file
     if (constructModelObjectFrom3dFile(modelFolderName))
     {
-		loadModel(modelFolderName);
+        // old function for loading a model from 3d file.
+		//loadModel(modelFolderName);
         // model was successfully constructed from 3d file, return the model
         return modelPtr;
     }
@@ -89,7 +97,7 @@ Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
 
 bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderName)
 {
-    if (FileManager::checkForModelDataFolder(modelFolderName));
+    if (FileManager::checkForModelDataFolder(modelFolderName))
     {
         // if this returns true then we have this models data file already
         // lets load the model data from the file instead of loading the model from the model file with assimp, this should be much faster.
@@ -113,160 +121,129 @@ bool ModelFactory::constructModelObjectFrom3dFile(std::string filename)
 
 void ModelFactory::populateModelData(std::string modelFolderName)
 {
-    std::string fileData;
+    // the mesh data from the loaded folder
+    std::vector<MeshData::MeshData> meshData = parseModelDataFolder(modelFolderName);
 
-    //FileManager::parseModelDataFolder(modelFolderName)
+    Mesh mesh;
 
-    //std::vector<Mesh> meshData = FileManager::parseModelDataFolder(modelFolderName);
+    modelData.modelName = modelFolderName;
 
- //   if (!FileManager::parseModelDataFolder(modelFolderName))
- //   {
- //       std::cout << "ERROR::ModelFactory:: Failed to read model data from file: " << modelFolderName << std::endl;
- //       return;
-	//}
-    // now proccess the data and populate the model data struct
-	//std::cout << meshData.size() << std::endl;
-
-
-    // find the
-
-}
-
-void ModelFactory::processNode(aiNode* node, const aiScene* scene)
-{
-    // process each mesh located at the current node
-    for (unsigned int i = 0; i < node->mNumMeshes; i++)
-    {
-        // the node object only contains indices to index the actual objects in the scene. 
-        // the scene contains all the data, node is just to keep stuff organized (like relations between nodes).
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-        modelData.meshes.push_back(processMesh(mesh, scene));
-    }
-    // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
-    for (unsigned int i = 0; i < node->mNumChildren; i++)
-    {
-        processNode(node->mChildren[i], scene);
-    }
-
-}
-int meshCount = 0;
-Mesh ModelFactory::processMesh(aiMesh* mesh, const aiScene* scene)
-{
-    meshCount++;
-    // data to fill
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
 
-    // walk through each of the mesh's vertices
-    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
-        Vertex vertex;
-        glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-        // positions
-        vector.x = mesh->mVertices[i].x; // x value of this vertex.
-        //FileManager::saveToFile("modeldata", std::to_string(vector.x));
-        vector.y = mesh->mVertices[i].y;
-        vector.z = mesh->mVertices[i].z;
-        vertex.Position = vector;
-        // normals
-        if (mesh->HasNormals())
+    // We are doing it this way because the top level objects are differant and we cant simply copy the meshData over
+    // we need to loop through the data and populate the modelData object with the raw data from the meshData object.
+    // The underlying data is the same, but the objects are differant. 
+
+	// TODO: Maybe try to improve this. 
+
+	// Resize modelData.meshes to accommodate all mesh data
+	modelData.meshes.resize(meshData.size());
+
+	// Loop through the generated mesh data and populate the modelData object
+	// that will be passed to the model constructor.
+	for (int meshIndex = 0; meshIndex < meshData.size(); meshIndex++)
+	{
+		// Populate the vertices, indices, and textures for each mesh
+
+		// Resize the vectors for this mesh to match the incoming data
+		modelData.meshes[meshIndex].vertices.resize(meshData[meshIndex].vertices.size());
+		modelData.meshes[meshIndex].indices.resize(meshData[meshIndex].indices.size());
+		modelData.meshes[meshIndex].textures.resize(meshData[meshIndex].textures.size());
+
+		// vertices
+		for (int v = 0; v < meshData[meshIndex].vertices.size(); v++)
+		{
+			modelData.meshes[meshIndex].vertices[v].Position = meshData[meshIndex].vertices[v].Position;
+			modelData.meshes[meshIndex].vertices[v].Normal = meshData[meshIndex].vertices[v].Normal;
+			modelData.meshes[meshIndex].vertices[v].TexCoords = meshData[meshIndex].vertices[v].TexCoords;
+			modelData.meshes[meshIndex].vertices[v].Tangent = meshData[meshIndex].vertices[v].Tangent;
+			modelData.meshes[meshIndex].vertices[v].Bitangent = meshData[meshIndex].vertices[v].Bitangent;
+
+			// Debug first vertex
+			if (meshIndex == 0 && v == 0) {
+				std::cout << "DEBUG::ModelFactory:: First vertex TexCoords: (" 
+						  << modelData.meshes[meshIndex].vertices[v].TexCoords.x << ", "
+						  << modelData.meshes[meshIndex].vertices[v].TexCoords.y << ")" << std::endl;
+			}
+
+			// Check if any vertex has invalid texture coordinates
+			if (meshIndex == 0 && (modelData.meshes[meshIndex].vertices[v].TexCoords.x < 0 || modelData.meshes[meshIndex].vertices[v].TexCoords.x > 1 ||
+				modelData.meshes[meshIndex].vertices[v].TexCoords.y < 0 || modelData.meshes[meshIndex].vertices[v].TexCoords.y > 1)) {
+				std::cout << "DEBUG::ModelFactory:: Warning - Vertex " << v << " has texture coords outside [0,1]: (" 
+						  << modelData.meshes[meshIndex].vertices[v].TexCoords.x << ", "
+						  << modelData.meshes[meshIndex].vertices[v].TexCoords.y << ")" << std::endl;
+			}
+		}
+
+        // Indices
+        for (int indicesIndex = 0; indicesIndex < meshData[meshIndex].indices.size(); indicesIndex++) 
         {
-            vector.x = mesh->mNormals[i].x;
-            vector.y = mesh->mNormals[i].y;
-            vector.z = mesh->mNormals[i].z;
-            vertex.Normal = vector;
+			modelData.meshes[meshIndex].indices[indicesIndex] = meshData[meshIndex].indices[indicesIndex];
         }
-        // texture coordinates
-        if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
-        {
-            glm::vec2 vec;
-            // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-            // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-            vec.x = mesh->mTextureCoords[0][i].x;
-            vec.y = mesh->mTextureCoords[0][i].y;
-            vertex.TexCoords = vec;
-            // tangent
-            vector.x = mesh->mTangents[i].x;
-            vector.y = mesh->mTangents[i].y;
-            vector.z = mesh->mTangents[i].z;
-            vertex.Tangent = vector;
-            // bitangent
-            vector.x = mesh->mBitangents[i].x;
-            vector.y = mesh->mBitangents[i].y;
-            vector.z = mesh->mBitangents[i].z;
-            vertex.Bitangent = vector;
-        }
-        else
-            vertex.TexCoords = glm::vec2(0.0f, 0.0f);
 
-        vertices.push_back(vertex);
-        // save to file buffer
-        FileManager::writeToBuffer(std::string("X:" + std::to_string(vertex.Position.x) + " Y:" + std::to_string(vertex.Position.y) + " Z:" + std::to_string(vertex.Position.z) + "\n"));
-        //FileManager::printBuffer();
-    }
+		// Textures
+		for (int t = 0; t < meshData[meshIndex].textures.size(); t++)
+		{
+			modelData.meshes[meshIndex].textures[t].id = meshData[meshIndex].textures[t].id;
+			modelData.meshes[meshIndex].textures[t].path = meshData[meshIndex].textures[t].path;
+			modelData.meshes[meshIndex].textures[t].type = meshData[meshIndex].textures[t].type;
+		}
+	}
 
-    // save to file buffer
-    //FileManager::saveToBuffer(vertices, indices, textures);
+	// Load textures for all meshes after model data has been populated
+	std::string textureDirectory = FileManager::getDefaultModelDataDir() + "/" + modelFolderName;
 
-    //FileManager::printBuffer();
-    //FileManager::saveBufferToFile("bufferdata");
-    FileManager::writeToBuffer("\n::\n");  // separator
+	std::cout << "DEBUG::ModelFactory:: Total meshes: " << modelData.meshes.size() << std::endl;
+	for (int meshIndex = 0; meshIndex < modelData.meshes.size(); meshIndex++)
+	{
+		std::cout << "DEBUG::ModelFactory:: Mesh " << meshIndex << " - Vertices: " << modelData.meshes[meshIndex].vertices.size() 
+				  << ", Indices: " << modelData.meshes[meshIndex].indices.size() 
+				  << ", Textures: " << modelData.meshes[meshIndex].textures.size() << std::endl;
 
+		for (int t = 0; t < modelData.meshes[meshIndex].textures.size(); t++)
+		{
+			// Check if texture has already been loaded
+			bool textureAlreadyLoaded = false;
+			for (const auto& loadedTex : modelData.textures_loaded)
+			{
+				if (loadedTex.path == modelData.meshes[meshIndex].textures[t].path)
+				{
+					// Texture already loaded, reuse it
+					modelData.meshes[meshIndex].textures[t].id = loadedTex.id;
+					textureAlreadyLoaded = true;
+					break;
+				}
+			}
 
+			// Load texture if not already loaded
+			if (!textureAlreadyLoaded && !modelData.meshes[meshIndex].textures[t].path.empty())
+			{
+				unsigned int textureID = TextureFromFile(modelData.meshes[meshIndex].textures[t].path.c_str(), textureDirectory, false);
+				modelData.meshes[meshIndex].textures[t].id = textureID;
 
-    // now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-    {
-        aiFace face = mesh->mFaces[i];
-        // retrieve all indices of the face and store them in the indices vector
-        for (unsigned int j = 0; j < face.mNumIndices; j++) {
-            indices.push_back(face.mIndices[j]);
-            FileManager::writeToBuffer("I:" + std::to_string(face.mIndices[j]) + "\n");
-        }
-    }
-    FileManager::writeToBuffer("\n::\n");  // separator
-    //FileManager::saveBufferToFile("bufferdata");
+				std::cout << "DEBUG::ModelFactory:: Loaded texture '" << modelData.meshes[meshIndex].textures[t].path 
+						  << "' type: " << modelData.meshes[meshIndex].textures[t].type 
+						  << " ID: " << textureID << std::endl;
 
-    // process materials
-    aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-    // we assume a convention for sampler names in the shaders. Each diffuse texture should be named
-    // as 'texture_diffuseN' where N is a sequential number ranging from 1 to MAX_SAMPLER_NUMBER. 
-    // Same applies to other texture as the following list summarizes:
-    // diffuse: texture_diffuseN
-    // specular: texture_specularN
-    // normal: texture_normalN
+				// Add to loaded textures list for future reference
+				modelData.textures_loaded.push_back(modelData.meshes[meshIndex].textures[t]);
+			}
+		}
 
-    // 1. diffuse maps
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    // 2. specular maps
-    std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-    // 3. normal maps
-    std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-    // 4. height maps
-    std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
+		// Setup the mesh VAO/VBO/EBO after all data is populated
+		modelData.meshes[meshIndex].setupMeshData();
+	}
 
-    // save textures to file buffer
-    for (const auto& texture : textures) {
-        FileManager::writeToBuffer("T:" + texture.type + " P:" + texture.path + " ID:" + std::to_string(texture.id) + "\n");
-    }
-
-    FileManager::saveBufferToFile("mesh_" + std::to_string(meshCount), "foldername");
-    FileManager::clearBuffer();
-
-    // return a mesh object created from the extracted mesh data
-    return Mesh(vertices, indices, textures);
+	std::cout << "INFO::ModelFactory:: Model data populated." << std::endl;
 }
 
 void ModelFactory::loadModel(std::string const& path)
 {
     if (testing)
     {
-        loadModelFile(path);
+        //loadModelFile(path);
     }
 
     // check if the dir exists
@@ -281,10 +258,8 @@ void ModelFactory::loadModel(std::string const& path)
     if (result)
     {
         std::cout << "INFO::FILEMANAGER:: Model data folder does not exist, folder will be created now. \n Loading model data from 3d model files, this may take a while..." << std::endl;
-        loadModelFile(path);
+        //loadModelFile(path);
     }
-
-
 }
 
 std::vector<Texture> ModelFactory::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
@@ -358,30 +333,186 @@ unsigned int ModelFactory::TextureFromFile(const char* path, const std::string& 
     return textureID;
 }
 
-void ModelFactory::loadModelFile(std::string const& path)
+std::vector<MeshData::MeshData> ModelFactory::parseModelDataFolder(std::string folderName)
 {
+	std::cout << "Parsing model data in folder: " << folderName << std::endl;
 
-    // read file via ASSIMP
-    Assimp::Importer importer;
-    // think of the scene as the whole 3D model or everything that is in the model file. It contains all the data of the 3D model. 
-    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
-    // check for errors
-    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
-    {
-        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
-        loadSuccessful = false;
-        return;
-    }
-    // retrieve the directory path of the filepath
-    directory = path.substr(0, path.find_last_of('/'));
-    // retrieve the model name (filename without extension)
-    modelData.modelName = path.substr(path.find_last_of('/') + 1, path.find_last_of('.') - path.find_last_of('/') - 1);
+	namespace fs = std::filesystem;
 
-    // process ASSIMP's root node recursively.
-    processNode(scene->mRootNode, scene);
+	const fs::path folder = FileManager::getDefaultModelDataDir() + "/" + folderName;
 
-    loadSuccessful = true;
+	std::vector<MeshData::MeshData> meshResults;
+
+	// this for loop goes through each file in the folder
+	for (auto const& entry : fs::directory_iterator(folder)) {
+		if (!entry.is_regular_file()) continue;
+
+		std::ifstream in(entry.path());
+		if (!in) {
+			std::cerr << "Failed to open: " << entry.path() << '\n';
+			continue;
+		}
+
+		MeshData::MeshData meshData; // one mesh per file
+		std::string line;
+		int section = 0; // 0 = vertices, 1 = texcoords, 2 = indices, 3 = textures
+		size_t tcIndex = 0; // texture coordinate index (per mesh)
+
+		while (std::getline(in, line)) {
+			// Check for section separators
+			if (line == "::") {
+				section++;
+				tcIndex = 0; // reset texture coordinate index for next mesh
+				continue;
+			}
+
+			if (section == 0) {
+				// Parse vertices (X:value Y:value Z:value)
+				std::string_view v(line);
+				if (auto t = parse_xyz_fast(v)) {
+					auto [x, y, z] = *t;
+					MeshData::MeshData::Vertex vertex{};
+					vertex.Position = glm::vec3(x, y, z);
+					meshData.vertices.push_back(std::move(vertex));
+				}
+			}
+			else if (section == 1) {
+				// Parse texture coordinates (TC:u v)
+				if (line.substr(0, 3) == "TC:") {
+					try {
+						std::string coords = line.substr(3);
+						size_t spacePos = coords.find(' ');
+						if (spacePos != std::string::npos) {
+							float u = std::stof(coords.substr(0, spacePos));
+							float v = std::stof(coords.substr(spacePos + 1));
+
+							// Assign texture coordinate to corresponding vertex
+							if (tcIndex < meshData.vertices.size()) {
+								meshData.vertices[tcIndex].TexCoords = glm::vec2(u, v);
+								tcIndex++;
+							}
+						}
+					}
+					catch (const std::exception& e) {
+						std::cerr << "Failed to parse texture coords: " << line << " Error: " << e.what() << '\n';
+					}
+				}
+			}
+			else if (section == 2) {
+				// Parse indices (I:value)
+				if (line.substr(0, 2) == "I:") {
+					try {
+						unsigned int index = std::stoul(line.substr(2));
+						meshData.indices.push_back(index);
+					}
+					catch (const std::exception&) {
+						std::cerr << "Failed to parse index: " << line << '\n';
+					}
+				}
+			}
+			else if (section == 3) {
+				// Parse textures (T:type P:path ID:id)
+				if (line.substr(0, 2) == "T:") {
+					MeshData::MeshData::Texture texture;
+
+					// Parse format: T:type P:path ID:id
+					size_t pPos = line.find(" P:");
+					size_t idPos = line.find(" ID:");
+
+					if (pPos != std::string::npos && idPos != std::string::npos) {
+						// Extract type
+						texture.type = line.substr(2, pPos - 2);
+
+						// Extract path
+						texture.path = line.substr(pPos + 3, idPos - (pPos + 3));
+
+						// Extract id
+						try {
+							texture.id = std::stoul(line.substr(idPos + 4));
+						}
+						catch (const std::exception&) {
+							texture.id = 0;
+						}
+
+						meshData.textures.push_back(texture);
+					}
+				}
+			}
+		}
+
+		// Only add meshData if it contains something meaningful
+		if (!meshData.vertices.empty() || !meshData.indices.empty() || !meshData.textures.empty()) {
+			meshResults.push_back(std::move(meshData));
+		}
+	}
+
+	return meshResults;
 }
+
+std::optional<std::tuple<float, float, float>> ModelFactory::parse_xyz_fast(std::string_view s)
+{
+    auto skip_spaces = [&]() {
+        while (!s.empty() && std::isspace(static_cast<unsigned char>(s.front()))) s.remove_prefix(1);
+        };
+    auto expect_char = [&](char ch)->bool {
+        skip_spaces();
+        if (s.empty() || s.front() != ch) return false;
+        s.remove_prefix(1);
+        return true;
+        };
+    auto parse_double = [&](double& out)->bool {
+        skip_spaces();
+        if (s.empty()) return false;
+        const char* begin = s.data();
+        std::from_chars_result r = std::from_chars(begin, begin + s.size(), out);
+        if (r.ec != std::errc()) return false;
+        size_t consumed = r.ptr - begin;
+        s.remove_prefix(consumed);
+        return true;
+        };
+
+    double x, y, z;
+    if (!expect_char('X')) return std::nullopt;
+    if (!expect_char(':')) return std::nullopt;
+    if (!parse_double(x)) return std::nullopt;
+    if (!expect_char('Y')) {
+        // allow a separating space then 'Y'
+        if (!expect_char(' ') || !expect_char('Y')) return std::nullopt;
+    }
+    if (!expect_char(':')) return std::nullopt;
+    if (!parse_double(y)) return std::nullopt;
+    if (!expect_char('Z')) {
+        if (!expect_char(' ') || !expect_char('Z')) return std::nullopt;
+    }
+    if (!expect_char(':')) return std::nullopt;
+    if (!parse_double(z)) return std::nullopt;
+    return std::make_tuple(x, y, z);
+}
+
+//void ModelFactory::loadModelFile(std::string const& path)
+//{
+//
+//    // read file via ASSIMP
+//    Assimp::Importer importer;
+//    // think of the scene as the whole 3D model or everything that is in the model file. It contains all the data of the 3D model. 
+//    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+//    // check for errors
+//    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+//    {
+//        std::cout << "ERROR::ASSIMP:: " << importer.GetErrorString() << std::endl;
+//        loadSuccessful = false;
+//        return;
+//    }
+//    // retrieve the directory path of the filepath
+//    directory = path.substr(0, path.find_last_of('/'));
+//    // retrieve the model name (filename without extension)
+//    modelData.modelName = path.substr(path.find_last_of('/') + 1, path.find_last_of('.') - path.find_last_of('/') - 1);
+//
+//    // process ASSIMP's root node recursively.
+//    processNode(scene->mRootNode, scene);
+//
+//    loadSuccessful = true;
+//}
 
 
 
