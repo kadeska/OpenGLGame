@@ -3,3 +3,4 @@
 out
 x64
 OpenGLGame/appData/
+AssimpModelLoader_FIXED.cpp

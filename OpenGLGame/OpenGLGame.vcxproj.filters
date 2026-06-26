@@ -95,7 +95,6 @@
     <None Include="shaderScr\vertex.shader" />
     <None Include="vertex.shader" />
     <None Include="fragment.shader" />
-    <None Include="assimp-vc143-mtd.dll" />
     <None Include="..\README.md" />
   </ItemGroup>
 </Project>

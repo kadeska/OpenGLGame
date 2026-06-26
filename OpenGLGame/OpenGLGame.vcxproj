@@ -73,11 +73,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs;C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs\react3dDebug;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs;C:\Users\Herna\source\repos\OpenGLGame\3rdParty\libs\react3dRelease;$(LibraryPath)</LibraryPath>
     <IncludePath>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\includes;$(IncludePath)</IncludePath>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -113,13 +114,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp23</LanguageStandard>
+      <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mtd.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;reactphysics3d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,7 +133,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -170,7 +171,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="assimp-vc143-mtd.dll" />
     <None Include="fragment.shader" />
     <None Include="shaderScr\fragment.shader" />
     <None Include="shaderScr\vertex.shader" />
