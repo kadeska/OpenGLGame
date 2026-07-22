@@ -7,7 +7,9 @@
 #include "modelfactory.hpp"
 
 //#include "../physics/RigidBody.hpp"
-#include <reactphysics3d/engine/PhysicsWorld.h>
+//#include <reactphysics3d/engine/PhysicsWorld.h>
+
+#include "../physics/PhysicsManager.hpp"
 
 
 namespace ModelInstance
@@ -18,6 +20,7 @@ namespace ModelInstance
     struct ModelInstance
     {
         Model* model;
+        reactphysics3d::RigidBody* rigidBody;
         glm::vec3 position;
         glm::vec3 scale;
         //MyRigidBody* rigidBody = nullptr;
@@ -31,8 +34,10 @@ namespace ModelInstance
 			// createModel function should take a name of the model, and find the model data folder with that name, 
             // and load the mesh data files from that folder to construct the model object.
 			model = modelFactory.createModel("backpack");
-            model->position = position;
-
+            //model->position = position;
+            model->setPosition(position);
+            // create rigidbody at position and add it to the physics world
+			rigidBody = physicsWorldptr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(position.x, position.y, position.z), reactphysics3d::Quaternion::identity()));
             
 
 			//rigidBody = new MyRigidBody(rp3d::Vector3(position.x, position.y, position.z), physicsWorldptr, model->getPtrIndex());

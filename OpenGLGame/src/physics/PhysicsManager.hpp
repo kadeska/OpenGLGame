@@ -1,14 +1,19 @@
 #pragma once
 #include <reactphysics3d/reactphysics3d.h>
+
+// PhysicsManager class is responsible for all things physics. 
+// This class is the main interface for my games physics system.
 class PhysicsManager
 {
 public:
 	const float gravity = -9.81f;
 	const int velocitySolverNbIterations = 20;
 public:
-	PhysicsManager() = default;
+	PhysicsManager();
 	~PhysicsManager() = default;
     int test();
+
+	void updatePhysicsWorld(const double timestep);
 
 	reactphysics3d::PhysicsCommon* getPhysicsCommonPtr();
 	reactphysics3d::PhysicsWorld* getPhysicsWorldPtr();

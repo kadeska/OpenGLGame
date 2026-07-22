@@ -81,6 +81,11 @@ public:
     {
         return ptrIndex;
 	}
+
+	void setPosition(glm::vec3 pos)
+	{
+		this->position = pos;
+	}
 };
 
 

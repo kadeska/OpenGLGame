@@ -4,6 +4,13 @@
 
 #include "PhysicsRigidBody.hpp"
 
+PhysicsManager::PhysicsManager()
+{
+    std::cout << "PhysiscManager constructor" << std::endl;
+    createPhyisicsCommonPtr();
+	createPhysicsWorldPtr(getPhysicsCommonPtr());
+}
+
 int PhysicsManager::test()
 {
 
@@ -40,7 +47,7 @@ int PhysicsManager::test()
     //}
 
 
-    PhysicsRigidBody rigidbody;
+    //PhysicsRigidBody rigidbody = PhysicsRigidBody(getPhysicsWorldPtr());
 
 
     return 0;
@@ -105,9 +112,12 @@ reactphysics3d::PhysicsWorld* PhysicsManager::createPhysicsWorldPtr(reactphysics
         worldSettings.defaultVelocitySolverNbIterations = velocitySolverNbIterations;
         worldSettings.isSleepingEnabled = false;
         worldSettings.gravity = reactphysics3d::Vector3(0, gravity, 0);
+    } 
+    else
+    {
+        // settings is not null so use the provided settings.
+        worldSettings = *settings;
     }
-    // settings is not null so use the provided settings.
-    worldSettings = *settings;
     physicsWorldPtr = physicsCommonPtr->createPhysicsWorld(worldSettings);
 
     return physicsWorldPtr;

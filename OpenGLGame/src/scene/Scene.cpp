@@ -1,20 +1,28 @@
 #include "Scene.hpp"
 #include "../utils/FileManager.hpp"
 
-#include "../physics/PhysicsWorld.hpp"
+#include "../physics/PhysicsManager.hpp"
+
+//#include "../physics/PhysicsWorld.hpp"
 //#include "../physics/RigidBody.hpp"
 
-PhysicsWorld* physicsWorld = nullptr;
+//PhysicsWorld* physicsWorld = nullptr;
+
+PhysicsManager* physicsManager;
 
 Scene::Scene()
 {
 	std::cout << "[Scene()] Creating scene..." << std::endl;
 
+	physicsManager = new PhysicsManager();
+
 	//FileManager::fileExists("path");
 	//FileManager::saveToFile("filename", "data");
 
 	// create physics world, then create some model instances and add them to the scene, and add the modelInstances rigid bodys to the physics world..
-	physicsWorld = new PhysicsWorld();
+	physicsManager->createPhyisicsCommonPtr();
+	physicsManager->createPhysicsWorldPtr(physicsManager->getPhysicsCommonPtr());
+
 
 	populateScene();
 }
@@ -29,7 +37,7 @@ void Scene::populateScene()
 
 	std::cout << "[populateScene()] Populating scene..." << std::endl;
 
-	if (physicsWorld == nullptr) 
+	if (physicsManager == nullptr) 
 	{
 		std::cout << "ERROR: physics world is null" << std::endl;
 		return;
@@ -46,7 +54,7 @@ void Scene::populateScene()
 	rp3d::BoxShape* floorShape = physicsCommon.createBoxShape(extent);
 
 	// Create the rigid body for the floor
-	rp3d::RigidBody* floorBody = physicsWorld->getWorld()->createRigidBody(floorTransform);
+	rp3d::RigidBody* floorBody = physicsManager->getPhysicsWorldPtr()->createRigidBody(floorTransform);
 
 	// Add the collider to the rigid body
 	rp3d::Collider* floorCollider = floorBody->addCollider(floorShape, rp3d::Transform::identity());
@@ -55,7 +63,7 @@ void Scene::populateScene()
 	floorBody->setType(rp3d::BodyType::STATIC);
 
 
-	models.push_back(new ModelInstance::ModelInstance("backpack", glm::vec3(0.0f, -4.0f, 0.0f), glm::vec3(1.0f), physicsWorld->getWorld()));
+	models.push_back(new ModelInstance::ModelInstance("backpack", glm::vec3(0.0f, -4.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr()));
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 
@@ -77,11 +85,11 @@ void Scene::populateScene()
 
 void Scene::updatePhysicsWorld(const double timestep)
 {
-	if (physicsWorld == nullptr) 
+	if (physicsManager == nullptr) 
 	{
-		std::cout << "ERROR : physics world is nullptr" << std::endl;
+		std::cout << "ERROR : physics manager is nullptr" << std::endl;
 		return;
 	}
 
-	physicsWorld->getWorld()->update(timestep);
+	physicsManager->getPhysicsWorldPtr()->update(timestep);
 }
