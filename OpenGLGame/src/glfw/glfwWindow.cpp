@@ -1,6 +1,8 @@
 #include <iostream>
 #include <chrono>
 
+#include <reactphysics3d/reactphysics3d.h>
+
 #include "glfwWindow.hpp"
 #include "../camera/camera.hpp"
 #include "../model/ModelInstance.hpp"
@@ -263,16 +265,18 @@ void OpenGLGame::GlfwWindow::startRender()
             // Get the current position of the rigid body that was calculated by the physics sim step.
 
 			// this transform is the one that is updated by the physics simulation step, so it will have the new position and orientation of the body after the physics simulation step.
-            const rp3d::Transform& currTransform = modInst->rigidBody->getRigidBodyPtr()->getTransform();
-            const rp3d::Vector3& position = currTransform.getPosition();
+            //-------------------------------------------------------------------------------------
+            // \/ \/ \/ \/
+            //const rp3d::Transform& currTransform = modInst->rigidBody->getRigidBodyPtr()->getTransform();
+            //const rp3d::Vector3& position = currTransform.getPosition();
 
             //modInst->position = glm::vec3(position.x, position.y, position.z);
 
             // Compute the interpolated transform of the rigid body
-            rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevTransform, currTransform, factor);
+            //rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevTransform, currTransform, factor);
 
             // now update the model instance position with the interpolated transform position for rendering.
-			modInst->position = glm::vec3(interpolatedTransform.getPosition().x, interpolatedTransform.getPosition().y, interpolatedTransform.getPosition().z);
+			//modInst->position = glm::vec3(interpolatedTransform.getPosition().x, interpolatedTransform.getPosition().y, interpolatedTransform.getPosition().z);
 
             // Display the position of the body
             //std::cout << "Body Position: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;

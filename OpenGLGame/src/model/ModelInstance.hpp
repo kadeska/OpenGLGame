@@ -6,7 +6,7 @@
 #include "../utils/FileManager.hpp"
 #include "modelfactory.hpp"
 
-#include "../physics/RigidBody.hpp"
+//#include "../physics/RigidBody.hpp"
 #include <reactphysics3d/engine/PhysicsWorld.h>
 
 
@@ -20,7 +20,7 @@ namespace ModelInstance
         Model* model;
         glm::vec3 position;
         glm::vec3 scale;
-        RigidBody* rigidBody = nullptr;
+        //MyRigidBody* rigidBody = nullptr;
         ModelInstance(const char* modelName, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 scl = glm::vec3(1.0f), rp3d::PhysicsWorld* physicsWorldptr = nullptr)
             : position(pos), scale(scl)
         {
@@ -35,7 +35,7 @@ namespace ModelInstance
 
             
 
-			rigidBody = new RigidBody(rp3d::Vector3(position.x, position.y, position.z), physicsWorldptr, model->getPtrIndex());
+			//rigidBody = new MyRigidBody(rp3d::Vector3(position.x, position.y, position.z), physicsWorldptr, model->getPtrIndex());
         }
 
         ~ModelInstance()
