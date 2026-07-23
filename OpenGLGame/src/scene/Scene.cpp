@@ -3,6 +3,8 @@
 
 #include "../physics/PhysicsManager.hpp"
 
+#include "../model/ModelFactory.hpp"
+
 //#include "../physics/PhysicsWorld.hpp"
 //#include "../physics/RigidBody.hpp"
 
@@ -91,5 +93,23 @@ void Scene::updatePhysicsWorld(const double timestep)
 		return;
 	}
 
-	physicsManager->getPhysicsWorldPtr()->update(timestep);
+	//physicsManager->getPhysicsWorldPtr()->update(timestep);
+	physicsManager->updatePhysicsWorld(timestep);
+
+	for (int i = 0; i < models.size(); i++)
+	{
+		ModelInstance::ModelInstance* modelInstance = models[i];
+		if (modelInstance != nullptr && modelInstance->rigidBody != nullptr)
+		{
+			//rp3d::Transform transform = modelInstance->rigidBody->getTransform();
+			//rp3d::Vector3 position = transform.getPosition();
+			//modelInstance->position = glm::vec3(position.x, position.y, position.z);
+			// Get the updated position of the body
+	        const reactphysics3d::Transform& transform = modelInstance->rigidBody->getTransform();
+	        const reactphysics3d::Vector3& position = transform.getPosition();
+			modelInstance->model->setPosition(glm::vec3(position.x, position.y, position.z));
+		}
+	}
+
+	//physicsManager->populateArrayOfRigidBodies(physicsManager->getArrayOfRigidBodies());
 }

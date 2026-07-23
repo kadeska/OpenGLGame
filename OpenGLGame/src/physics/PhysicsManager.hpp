@@ -1,5 +1,6 @@
 #pragma once
 #include <reactphysics3d/reactphysics3d.h>
+#include "../model/ModelInstance.hpp"
 
 // PhysicsManager class is responsible for all things physics. 
 // This class is the main interface for my games physics system.
@@ -21,6 +22,10 @@ public:
 	reactphysics3d::PhysicsCommon* createPhyisicsCommonPtr();
 	reactphysics3d::PhysicsWorld* createPhysicsWorldPtr(reactphysics3d::PhysicsCommon* physicsCommonPtr, const reactphysics3d::PhysicsWorld::WorldSettings* settings = nullptr);
 
+	void populateArrayOfRigidBodies(std::vector<reactphysics3d::RigidBody*>& rigidBodies);
+	std::vector<reactphysics3d::RigidBody*>& getArrayOfRigidBodies();
+	std::vector<ModelInstance::ModelInstance*>& getArrayOfModelInstances();
+
 private:
 	// First you need to create the PhysicsCommon object.
 	// This is a factory module that you can use to create physics
@@ -31,5 +36,9 @@ private:
 	// physics world
 	reactphysics3d::PhysicsWorld* physicsWorldPtr = nullptr;
 
+	// Array of rigid bodies in the physics world
+	std::vector<reactphysics3d::RigidBody*> rigidBodies = {};
+
+	std::vector<ModelInstance::ModelInstance*> modelInstances = {};
 };
 

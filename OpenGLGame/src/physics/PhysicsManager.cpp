@@ -53,8 +53,20 @@ int PhysicsManager::test()
     return 0;
 }
 
+void PhysicsManager::updatePhysicsWorld(const double timestep)
+{
+    if (physicsWorldPtr != nullptr)
+    {
+        physicsWorldPtr->update(timestep);
+		// update model instance positions based on the physics simulation results.
+    }
+}
+//
+// 
+// 
 //---------------------------------
 // TODO: create a logging system
+// TODO: 
 //---------------------------------
 
 reactphysics3d::PhysicsCommon* PhysicsManager::getPhysicsCommonPtr()
@@ -90,16 +102,17 @@ reactphysics3d::PhysicsCommon* PhysicsManager::createPhyisicsCommonPtr()
 
 reactphysics3d::PhysicsWorld* PhysicsManager::createPhysicsWorldPtr(reactphysics3d::PhysicsCommon* physicsCommonPtr, const reactphysics3d::PhysicsWorld::WorldSettings* settings)
 {
+    if (physicsCommonPtr == nullptr)
+    {
+        std::cout << "Error: PhysicsCommon pointer is null. Must create physics common before world." << std::endl;
+        return nullptr;
+    }
     if (physicsWorldPtr != nullptr) 
     {
         std::cout << "Error: PhysicsWorld pointer already exists." << std::endl;
         return physicsWorldPtr;
     }
-    if (physicsCommonPtr == nullptr) 
-    {
-		std::cout << "Error: PhysicsCommon pointer is null. Must create physics common before world." << std::endl;
-		return nullptr;
-    }
+    
 
     // Create the physics world with the provided settings
     // Note: settings is a const reference, so modify caller-provided settings if needed before calling
@@ -121,4 +134,29 @@ reactphysics3d::PhysicsWorld* PhysicsManager::createPhysicsWorldPtr(reactphysics
     physicsWorldPtr = physicsCommonPtr->createPhysicsWorld(worldSettings);
 
     return physicsWorldPtr;
+}
+
+void PhysicsManager::populateArrayOfRigidBodies(std::vector<reactphysics3d::RigidBody*>& rigidBodies)
+{
+    if (physicsWorldPtr != nullptr)
+    {
+        // Implementation for getting array of rigid bodies
+
+
+        for (int i = 0; i < getPhysicsWorldPtr()->getNbRigidBodies(); i++) 
+        {
+			rigidBodies.push_back(getPhysicsWorldPtr()->getRigidBody(i));
+			std::cout << "RigidBody " << i << " added to array." << std::endl;
+        }
+    }
+}
+
+std::vector<reactphysics3d::RigidBody*>& PhysicsManager::getArrayOfRigidBodies()
+{
+    return rigidBodies;
+}
+
+std::vector<ModelInstance::ModelInstance*>& PhysicsManager::getArrayOfModelInstances()
+{
+    return modelInstances;
 }
