@@ -23,6 +23,8 @@ public:
 	reactphysics3d::PhysicsWorld* createPhysicsWorldPtr(reactphysics3d::PhysicsCommon* physicsCommonPtr, const reactphysics3d::PhysicsWorld::WorldSettings* settings = nullptr);
 
 	void populateArrayOfRigidBodies(std::vector<reactphysics3d::RigidBody*>& rigidBodies);
+	void createRigidBodyForModelInstance(ModelInstance::ModelInstance* modelInstance);
+	
 	std::vector<reactphysics3d::RigidBody*>& getArrayOfRigidBodies();
 	std::vector<ModelInstance::ModelInstance*>& getArrayOfModelInstances();
 

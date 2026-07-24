@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "PhysicsRigidBody.hpp"
+#include <reactphysics3d/mathematics/Transform.h>
 
 PhysicsManager::PhysicsManager()
 {
@@ -149,6 +150,13 @@ void PhysicsManager::populateArrayOfRigidBodies(std::vector<reactphysics3d::Rigi
 			std::cout << "RigidBody " << i << " added to array." << std::endl;
         }
     }
+}
+
+void PhysicsManager::createRigidBodyForModelInstance(ModelInstance::ModelInstance* modelInstance)
+{
+	modelInstance->rigidBody = physicsWorldPtr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(modelInstance->position.x, modelInstance->position.y, modelInstance->position.z), reactphysics3d::Quaternion::identity()));
+
+
 }
 
 std::vector<reactphysics3d::RigidBody*>& PhysicsManager::getArrayOfRigidBodies()

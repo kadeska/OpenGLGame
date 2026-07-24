@@ -27,7 +27,7 @@ private:
     // and to check if this model is already loaded in the model factory when creating a new model.
     int ptrIndex = -1; 
 public:
-
+	bool loadSuccessful = false;
 
     // model data 
     //std::vector<Texture> textures_loaded; // all the loaded textures for this model	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
@@ -63,14 +63,19 @@ public:
     // draws the model, and thus all its meshes
     void Draw(Shader* shader)
     {
-        for (unsigned int i = 0; i < this->modelData.meshes.size(); i++)
-            this->modelData.meshes[i].Draw(shader);
+        if (loadSuccessful) 
+        {
+            for (unsigned int i = 0; i < this->modelData.meshes.size(); i++)
+                this->modelData.meshes[i].Draw(shader);
+        }
+        
     }
 
     void setPtrIndex(int index)
     {
-        // Only allow setting the ptr index when it hasent been set before. 
-        if (ptrIndex == -1) 
+        // Only allow setting the ptr index when it hasent been set before, 
+        // and only if the model has been succesfully loaded.
+        if ((ptrIndex == -1) && loadSuccessful) 
         {
             this->ptrIndex = index;
         }
@@ -84,7 +89,10 @@ public:
 
 	void setPosition(glm::vec3 pos)
 	{
-		this->position = pos;
+        if (loadSuccessful) 
+        {
+            this->position = pos;
+        }
 	}
 };
 

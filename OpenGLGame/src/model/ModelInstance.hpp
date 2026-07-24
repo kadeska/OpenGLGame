@@ -9,14 +9,14 @@
 //#include "../physics/RigidBody.hpp"
 //#include <reactphysics3d/engine/PhysicsWorld.h>
 
-#include "../physics/PhysicsManager.hpp"
+#include <reactphysics3d/reactphysics3d.h>          
 
 
 namespace ModelInstance
 {
 	
 
-    // ModelInstance structure to hold model data and transformation information
+    // ModelInstance structure to hold model data, RigidBody if applicable, and transformation information
     struct ModelInstance
     {
         Model* model;
@@ -31,11 +31,26 @@ namespace ModelInstance
             //model = new Model(path); // path is given from Scene::populateScene()
 
 
-			// createModel function should take a name of the model, and find the model data folder with that name, 
-            // and load the mesh data files from that folder to construct the model object.
-			model = modelFactory.createModel("backpack");
-            //model->position = position;
+			// create a model object using our model factory, and set its position to the given position
+			model = modelFactory.createModel(modelName);
+            
+            // check if the model was created succesfully.
+            if (!model) {
+                std::cerr << "Error: Failed to create model: " << modelName << std::endl;
+                return;
+            }
+            model->loadSuccessful = true;
+
+            // set the models position. 
+            // 
+            // If the model is flagged to have a rigid body then create a rigid body.
+            // 
+            // TODO: Implament a bool flag (hasRigidBody) in the ModelInstance struct, 
+            // this can be used for checking if this model should expect to have a rigid body attached to it.
+            // If the flag is set to true and there is no rigidbody attached, throw a soft error and proceed with rendering as usual. 
+            // 
             model->setPosition(position);
+            
             // create rigidbody at position and add it to the physics world
 			rigidBody = physicsWorldptr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(position.x, position.y, position.z), reactphysics3d::Quaternion::identity()));
             

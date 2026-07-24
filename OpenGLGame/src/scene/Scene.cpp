@@ -65,7 +65,9 @@ void Scene::populateScene()
 	floorBody->setType(rp3d::BodyType::STATIC);
 
 
+	// 
 	models.push_back(new ModelInstance::ModelInstance("backpack", glm::vec3(0.0f, -4.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr()));
+	models.push_back(new ModelInstance::ModelInstance("othermodel", glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr()));
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 
@@ -99,7 +101,7 @@ void Scene::updatePhysicsWorld(const double timestep)
 	for (int i = 0; i < models.size(); i++)
 	{
 		ModelInstance::ModelInstance* modelInstance = models[i];
-		if (modelInstance != nullptr && modelInstance->rigidBody != nullptr)
+		if ((modelInstance != nullptr) && (modelInstance->model != NULL) && (modelInstance->rigidBody != nullptr))
 		{
 			//rp3d::Transform transform = modelInstance->rigidBody->getTransform();
 			//rp3d::Vector3 position = transform.getPosition();

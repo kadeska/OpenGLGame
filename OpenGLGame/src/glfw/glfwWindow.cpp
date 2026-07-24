@@ -123,8 +123,9 @@ void OpenGLGame::GlfwWindow::render()
             myShader->setMat4("model", model);
 
             // draw call
-            modelInstance->model->Draw(myShader);
-
+            if (modelInstance->model) {
+                modelInstance->model->Draw(myShader);
+            }
 
         }
     }
