@@ -170,7 +170,6 @@
     <ClInclude Include="src\shader.hpp" />
     <ClInclude Include="src\stbimage\stbimp.h" />
     <ClInclude Include="src\utils\FileManager.hpp" />
-    <ClInclude Include="src\utils\ModelDataLoader.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

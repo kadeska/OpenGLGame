@@ -18,6 +18,9 @@ public:
     // ------------------------------------------------------------------------
     Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
     {
+        // uncomment for wirframe mode.
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
         // 1. retrieve the vertex/fragment source code from filePath
         std::string vertexCode;
         std::string fragmentCode;

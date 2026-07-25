@@ -8,7 +8,7 @@
 
 #include "../utils/FileManager.hpp"
 
-#include "../utils/ModelDataLoader.hpp"
+//#include "../utils/ModelDataLoader.hpp"
 #include "mesh/mesh.hpp"
 
 //#include "../physics/PhysicsManager.hpp"
@@ -186,6 +186,11 @@ void ModelFactory::populateModelData(std::string modelFolderName)
         }
 
 		// Textures
+		if (meshData[meshIndex].textures.empty())
+		{
+			std::cout << "DEBUG::ModelFactory:: Mesh " << meshIndex << " has no textures." << std::endl;
+			return;
+		}
 		for (int t = 0; t < meshData[meshIndex].textures.size(); t++)
 		{
 			modelData.meshes[meshIndex].textures[t].id = meshData[meshIndex].textures[t].id;
