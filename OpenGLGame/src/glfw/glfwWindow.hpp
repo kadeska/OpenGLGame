@@ -33,6 +33,8 @@ namespace OpenGLGame
 		// this array is basically our "scene"
 		//std::vector<ModelInstance*> models;
 	public:
+		
+
 		GlfwWindow();
 		~GlfwWindow() = default;
 		

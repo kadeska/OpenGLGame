@@ -22,8 +22,8 @@ Scene::Scene()
 	//FileManager::saveToFile("filename", "data");
 
 	// create physics world, then create some model instances and add them to the scene, and add the modelInstances rigid bodys to the physics world..
-	physicsManager->createPhyisicsCommonPtr();
-	physicsManager->createPhysicsWorldPtr(physicsManager->getPhysicsCommonPtr());
+	//physicsManager->createPhyisicsCommonPtr();
+	//physicsManager->createPhysicsWorldPtr(physicsManager->getPhysicsCommonPtr());
 
 
 	populateScene();

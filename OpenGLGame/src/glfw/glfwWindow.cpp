@@ -8,35 +8,29 @@
 #include "../model/ModelInstance.hpp"
 #include "../scene/Scene.hpp"
 
-
-// signals
-bool shouldRender = true;
-
-
-// models
-
-//LearnOpenGLProj::ModelInstance* modelA = nullptr;// = new LearnOpenGLProj::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
-//LearnOpenGLProj::ModelInstance* modelB = nullptr;// = new LearnOpenGLProj::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(100.0f, 100.0f, 100.0f), glm::vec3(1.0f));
-
-// scene
-Scene* scene = nullptr;
-
-
-// camera
-
-Camera* camera = nullptr;// (glm::vec3(0.0f, 0.0f, 3.0f))
-bool firstMouse = true;
-float lastX = OpenGLGame::SCR_WIDTH / 2.0f;
-float lastY = OpenGLGame::SCR_HEIGHT / 2.0f;
-
-// model
-//Model* ourModel = nullptr;
+// timing helpers for fixed timestep loop
+static long double previousFrameTime; // = getCurrentSystemTime();
+static long double accumulator; // = 0.0L;
 
 // timing
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+// signals
+bool shouldRender = true;
+
+// camera
+Camera* camera = nullptr;// (glm::vec3(0.0f, 0.0f, 3.0f))
+bool firstMouse = true;
+float lastX; // = OpenGLGame::SCR_WIDTH / 2.0f;
+float lastY; // = OpenGLGame::SCR_HEIGHT / 2.0f;
+
+// models
+// models should be read from a worldData file, which contains the models and their positions, scales, and other properties.
+
+// scene
+Scene* scene = nullptr;
 
 // Returns current system time in seconds (high-resolution) as a long double.
 static long double getCurrentSystemTime()
@@ -47,34 +41,36 @@ static long double getCurrentSystemTime()
 
 bool OpenGLGame::GlfwWindow::initGlad()
 {
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    if (!result)
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        return false;
     }
-    return true;
+    return result;
 }
 
 bool OpenGLGame::GlfwWindow::initGLFW()
 {
-    if (!glfwInit()) 
+	bool result = glfwInit();
+    if (!result) 
     {
 		std::cout << "Failed to initialize GLFW" << std::endl;
-        return false;
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    return true;
+    return result;
 }
 
 bool OpenGLGame::GlfwWindow::makeShaderProgram()
 {
 	std::cout << "Making shader program..." << std::endl;
     myShader = new Shader("vertex.shader", "fragment.shader");
-
-    return myShader;
+    if (!myShader) {
+        std::cout << "Failed to create shader program" << std::endl;
+    }
+    return (myShader != nullptr);
 }
 
 void OpenGLGame::GlfwWindow::render()
@@ -124,6 +120,7 @@ void OpenGLGame::GlfwWindow::render()
 
             // draw call
             if (modelInstance->model) {
+                modelInstance->update();
                 modelInstance->model->Draw(myShader);
             }
 
@@ -141,7 +138,15 @@ void OpenGLGame::GlfwWindow::render()
 
 OpenGLGame::GlfwWindow::GlfwWindow()
 {
+    // timing helpers for fixed timestep loop
+    previousFrameTime = getCurrentSystemTime();
+    accumulator = 0.0L;
+
+    // camera stuff
     camera = new Camera(glm::vec3(0.0f, 0.0f, 3.0f));
+    lastX = SCR_WIDTH / 2.0f;
+    lastY = SCR_HEIGHT / 2.0f;
+
 }
 
 // this gets called by the main function and creates the window and context.
@@ -219,9 +224,7 @@ bool OpenGLGame::GlfwWindow::createScene()
 }
 
 
-// timing helpers for fixed timestep loop
-static long double previousFrameTime = getCurrentSystemTime();
-static long double accumulator = 0.0L;
+
 
 void OpenGLGame::GlfwWindow::startRender()
 {
