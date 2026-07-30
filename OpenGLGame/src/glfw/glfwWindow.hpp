@@ -5,6 +5,8 @@
 //#include "../camera/camera.hpp"
 #include "../model/model.hpp"
 
+#include "../utils/Logger.hpp"
+
 
 
 

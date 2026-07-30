@@ -5,16 +5,16 @@
 
 #include "../model/ModelFactory.hpp"
 
-//#include "../physics/PhysicsWorld.hpp"
-//#include "../physics/RigidBody.hpp"
-
-//PhysicsWorld* physicsWorld = nullptr;
+#include "../utils/Logger.hpp"
+using namespace logger;
 
 PhysicsManager* physicsManager;
 
 Scene::Scene()
 {
-	std::cout << "[Scene()] Creating scene..." << std::endl;
+	//std::cout << "[Scene()] Creating scene..." << std::endl;
+	log("Scene() constructor", LogType::DEBUG);
+	log("Creating scene...");
 
 	physicsManager = new PhysicsManager();
 
@@ -31,17 +31,20 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	std::cout << "[~Scene()] Destroying scene..." << std::endl;
+	//std::cout << "[~Scene()] Destroying scene..." << std::endl;
+	log("Destroying scene...");
 }
 
 void Scene::populateScene()
 {
 
-	std::cout << "[populateScene()] Populating scene..." << std::endl;
+	//std::cout << "[populateScene()] Populating scene..." << std::endl;
+	log("Populating scene...");
 
 	if (physicsManager == nullptr) 
 	{
-		std::cout << "ERROR: physics world is null" << std::endl;
+		//std::cout << "ERROR: physics world is null" << std::endl;
+		log("Physics manager is null", LogType::ERROR);
 		return;
 	}
 
@@ -91,7 +94,8 @@ void Scene::updatePhysicsWorld(const double timestep)
 {
 	if (physicsManager == nullptr) 
 	{
-		std::cout << "ERROR : physics manager is nullptr" << std::endl;
+		//std::cout << "ERROR : physics manager is nullptr" << std::endl;
+		log("Physics manager is nullptr", LogType::ERROR);
 		return;
 	}
 

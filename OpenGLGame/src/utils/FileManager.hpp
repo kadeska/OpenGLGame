@@ -6,7 +6,10 @@
 namespace FileManager 
 {
 		
-	std::string getDefaultModelDataDir();		
+	std::string getDefaultModelDataDir();
+	// get the active model data dir.
+	// TODO: Actually implement an active dir.
+	std::string getActiveModelDataDir();
 
 
 	void createModelDataFolder();

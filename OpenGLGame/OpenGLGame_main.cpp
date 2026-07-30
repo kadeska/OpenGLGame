@@ -9,7 +9,12 @@
 
 #include <iostream>
 
+
+
 #include "src/glfw/glfwWindow.hpp"
+
+#include "src/utils/Logger.hpp"
+using namespace logger;
 
 //#include <reactphysics3d/reactphysics3d.h>
 
@@ -27,12 +32,17 @@ int main()
 {
     std::atexit(endProg);
 
-    std::cout << "Hello World!\n" << std::endl;
+
+    //std::cout << "Hello World!\n" << std::endl;
+    log("Starting OpenGL Game...");
+    // example usage of my own template print function
+    // print(2);
     
     // create a window and openGL context
     if (!m_window.create("Testing OpenGL", OpenGLGame::SCR_WIDTH, OpenGLGame::SCR_HEIGHT)) 
     {
-		std::cout << "Failed to create window" << std::endl;
+		//std::cout << "Failed to create window" << std::endl;
+        log("Failed to create GLFW window. ");
         return 1;
     }
 

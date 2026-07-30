@@ -9,7 +9,10 @@
 //#include "../physics/RigidBody.hpp"
 //#include <reactphysics3d/engine/PhysicsWorld.h>
 
-#include <reactphysics3d/reactphysics3d.h>          
+#include <reactphysics3d/reactphysics3d.h>       
+
+#include "../utils/Logger.hpp"
+using namespace logger;
 
 
 namespace ModelInstance
@@ -37,7 +40,9 @@ namespace ModelInstance
             
             // check if the model was created succesfully.
             if (!model) {
-                std::cerr << "Error: Failed to create model: " << modelName << std::endl;
+                //std::cerr << "Error: Failed to create model: " << modelName << std::endl;
+                log("Error: Failed to create model: " + std::string(modelName), LogType::ERROR);    
+
                 return;
             }
             model->loadSuccessful = true;

@@ -49,7 +49,7 @@ private:
 
 	// This is the main loading function that is called by the createModel function. It will first try to load the model data from a data file, if that fails it will try to load the model from the 3d file.
 	// loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
-	void loadModel(std::string const& path);
+	//[[deprecated("Function 'loadModel(...)' is unused.")]] void loadModel(std::string const& path);
 
 	// checks all material textures of a given type and loads the textures if they're not loaded yet.
 	// the required info is returned as a Texture struct.

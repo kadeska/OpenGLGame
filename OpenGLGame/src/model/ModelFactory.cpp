@@ -13,6 +13,9 @@
 
 //#include "../physics/PhysicsManager.hpp"
 
+#include "../utils/Logger.hpp"
+using namespace logger;
+
 
 bool testing = false;
 
@@ -51,7 +54,8 @@ bool ModelFactory::removeLoadedModelPtr(Model* model)
     // if the model pointer is nullptr or if the model hasent been loaded yet
     if ((model == nullptr) || model->getPtrIndex() == -1) 
     {
-        std::cout << "ERROR::ModelFactory:: Failed to remove model pointer. Invalid model pointer provided, or model hasent been loaded yet." << std::endl;
+        //std::cout << "ERROR::ModelFactory:: Failed to remove model pointer. Invalid model pointer provided, or model hasent been loaded yet." << std::endl;
+		log("Failed to remove model pointer. Invalid model pointer provided, or model hasent been loaded yet.", LogType::ERROR);
 		return false;
     }
 	loadedModels.erase(std::remove(loadedModels.begin(), loadedModels.end(), model), loadedModels.end());
@@ -62,7 +66,8 @@ bool ModelFactory::removeLoadedModelByIndex(int index)
 {
     if (index < 0 || index >= loadedModels.size()) 
     {
-        std::cout << "ERROR::ModelFactory:: Failed to remove model pointer. Invalid index provided." << std::endl;
+        //std::cout << "ERROR::ModelFactory:: Failed to remove model pointer. Invalid index provided." << std::endl;
+		log("Failed to remove model pointer. Invalid index provided.", LogType::ERROR);
 		return false;
     }
     loadedModels.erase(loadedModels.begin() + index);
@@ -81,19 +86,27 @@ Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
 		return modelPtr;
     }
     // model data was not found. Need to load from 3d file
-    if (constructModelObjectFrom3dFile(modelFolderName))
-    {
-        // old function for loading a model from 3d file.
-		//loadModel(modelFolderName);
-        // model was successfully constructed from 3d file, return the model
-        return modelPtr;
-    }
+  //  if (constructModelObjectFrom3dFile(modelFolderName))   // No longer used.  
+  //  {
+  //      // old function for loading a model from 3d file.
+		////loadModel(modelFolderName);
+  //      // model was successfully constructed from 3d file, return the model
+  //      return modelPtr;
+  //  }
 	// model data was not found, and failed to load model from 3d file. Return nullptr
 
-	std::cout << "ERROR::ModelFactory:: Failed to construct model object: " << modelFolderName << std::endl;
-	std::cout << "Model data file not found, and failed to load model from 3d file. Returning nullptr." << std::endl;
-	std::cout << "Please check the file path and ensure the model file exists." << std::endl;
-	std::cout << "" << std::endl;
+	//std::cout << "ERROR::ModelFactory:: Failed to construct model object: " << modelFolderName << std::endl;
+	//std::cout << "Model data file not found, and failed to load model from 3d file. Returning nullptr." << std::endl;
+	//std::cout << "Please check the file path and ensure the model file exists." << std::endl;
+	//std::cout << "" << std::endl;
+
+	log("Failed to construct model object: " + modelFolderName, LogType::ERROR);
+	log("Please check the model data file path and ensure the model data folder exists.", LogType::ERROR);
+	log("----", LogType::DEBUG);
+	log("Given folder name: " + modelFolderName, LogType::DEBUG);
+	log("Model data folder directory: " + FileManager::getActiveModelDataDir(), LogType::DEBUG);
+	log("----", LogType::DEBUG);
+
 	return nullptr;
 }
 
@@ -103,7 +116,8 @@ bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderNam
     {
         // if this returns true then we have this models data file already
         // lets load the model data from the file instead of loading the model from the model file with assimp, this should be much faster.
-        std::cout << "INFO::ModelFactory:: Model data file found. Loading model data from file..." << std::endl;
+        //std::cout << "INFO::ModelFactory:: Model data file found. Loading model data from file..." << std::endl;
+		log("Model data folder found, loading model date from model data files...");
 
         // load the model data from the file and construct the model data in memory
         
@@ -116,10 +130,10 @@ bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderNam
     return false; // model data file does not exits
 }
 
-bool ModelFactory::constructModelObjectFrom3dFile(std::string filename)
-{
-    return false;
-}
+//bool ModelFactory::constructModelObjectFrom3dFile(std::string filename)
+//{
+//    return false;
+//}
 
 void ModelFactory::populateModelData(std::string modelFolderName)
 {
@@ -164,18 +178,23 @@ void ModelFactory::populateModelData(std::string modelFolderName)
 			modelData.meshes[meshIndex].vertices[v].Bitangent = meshData[meshIndex].vertices[v].Bitangent;
 
 			// Debug first vertex
-			if (meshIndex == 0 && v == 0) {
-				std::cout << "DEBUG::ModelFactory:: First vertex TexCoords: (" 
-						  << modelData.meshes[meshIndex].vertices[v].TexCoords.x << ", "
-						  << modelData.meshes[meshIndex].vertices[v].TexCoords.y << ")" << std::endl;
-			}
+			//if (meshIndex == 0 && v == 0) {
+			//	//std::cout << "DEBUG::ModelFactory:: First vertex TexCoords: (" 
+			//			  //<< modelData.meshes[meshIndex].vertices[v].TexCoords.x << ", "
+			//			  //<< modelData.meshes[meshIndex].vertices[v].TexCoords.y << ")" << std::endl;
+			//	log("", LogType::DEBUG);
+			//}
 
 			// Check if any vertex has invalid texture coordinates
 			if (meshIndex == 0 && (modelData.meshes[meshIndex].vertices[v].TexCoords.x < 0 || modelData.meshes[meshIndex].vertices[v].TexCoords.x > 1 ||
 				modelData.meshes[meshIndex].vertices[v].TexCoords.y < 0 || modelData.meshes[meshIndex].vertices[v].TexCoords.y > 1)) {
-				std::cout << "DEBUG::ModelFactory:: Warning - Vertex " << v << " has texture coords outside [0,1]: (" 
-						  << modelData.meshes[meshIndex].vertices[v].TexCoords.x << ", "
-						  << modelData.meshes[meshIndex].vertices[v].TexCoords.y << ")" << std::endl;
+				//std::cout << "DEBUG::ModelFactory:: Warning - Vertex " << v << " has texture coords outside [0,1]: (" 
+						  //<< modelData.meshes[meshIndex].vertices[v].TexCoords.x << ", "
+						  //<< modelData.meshes[meshIndex].vertices[v].TexCoords.y << ")" << std::endl;
+
+				log("Warning - Vertex " + std::to_string(v) + " has texture coords outside [0,1]: (" 
+					+ std::to_string(modelData.meshes[meshIndex].vertices[v].TexCoords.x) 
+					+ ", " + std::to_string(modelData.meshes[meshIndex].vertices[v].TexCoords.y) + ")", LogType::DEBUG);
 			}
 		}
 
@@ -188,7 +207,8 @@ void ModelFactory::populateModelData(std::string modelFolderName)
 		// Textures
 		if (meshData[meshIndex].textures.empty())
 		{
-			std::cout << "DEBUG::ModelFactory:: Mesh " << meshIndex << " has no textures." << std::endl;
+			//std::cout << "DEBUG::ModelFactory:: Mesh " << meshIndex << " has no textures." << std::endl;
+			log("Mesh " + std::to_string(meshIndex) + " has no textures.", LogType::DEBUG);
 			return;
 		}
 		for (int t = 0; t < meshData[meshIndex].textures.size(); t++)
@@ -202,12 +222,17 @@ void ModelFactory::populateModelData(std::string modelFolderName)
 	// Load textures for all meshes after model data has been populated
 	std::string textureDirectory = FileManager::getDefaultModelDataDir() + "/" + modelFolderName;
 
-	std::cout << "DEBUG::ModelFactory:: Total meshes: " << modelData.meshes.size() << std::endl;
+	//std::cout << "DEBUG::ModelFactory:: Total meshes: " << modelData.meshes.size() << std::endl;
+	log("Total meshes: " + std::to_string(modelData.meshes.size()), LogType::DEBUG);
 	for (int meshIndex = 0; meshIndex < modelData.meshes.size(); meshIndex++)
 	{
-		std::cout << "DEBUG::ModelFactory:: Mesh " << meshIndex << " - Vertices: " << modelData.meshes[meshIndex].vertices.size() 
-				  << ", Indices: " << modelData.meshes[meshIndex].indices.size() 
-				  << ", Textures: " << modelData.meshes[meshIndex].textures.size() << std::endl;
+		//std::cout << "DEBUG::ModelFactory:: Mesh " << meshIndex << " - Vertices: " << modelData.meshes[meshIndex].vertices.size() 
+				  //<< ", Indices: " << modelData.meshes[meshIndex].indices.size() 
+				  //<< ", Textures: " << modelData.meshes[meshIndex].textures.size() << std::endl;
+
+		log("Mesh " + std::to_string(meshIndex) + " - Vertices: " + std::to_string(modelData.meshes[meshIndex].vertices.size()) 
+			+ ", Indices: " + std::to_string(modelData.meshes[meshIndex].indices.size()) 
+			+ ", Textures: " + std::to_string(modelData.meshes[meshIndex].textures.size()), LogType::DEBUG);
 
 		for (int t = 0; t < modelData.meshes[meshIndex].textures.size(); t++)
 		{
@@ -230,9 +255,12 @@ void ModelFactory::populateModelData(std::string modelFolderName)
 				unsigned int textureID = TextureFromFile(modelData.meshes[meshIndex].textures[t].path.c_str(), textureDirectory, false);
 				modelData.meshes[meshIndex].textures[t].id = textureID;
 
-				std::cout << "DEBUG::ModelFactory:: Loaded texture '" << modelData.meshes[meshIndex].textures[t].path 
-						  << "' type: " << modelData.meshes[meshIndex].textures[t].type 
-						  << " ID: " << textureID << std::endl;
+				//std::cout << "DEBUG::ModelFactory:: Loaded texture '" << modelData.meshes[meshIndex].textures[t].path 
+						  //<< "' type: " << modelData.meshes[meshIndex].textures[t].type 
+						  //<< " ID: " << textureID << std::endl;
+
+				log("Loaded texture '" + modelData.meshes[meshIndex].textures[t].path + "' type: " 
+					+ modelData.meshes[meshIndex].textures[t].type + " ID: " + std::to_string(textureID), LogType::DEBUG);
 
 				// Add to loaded textures list for future reference
 				modelData.textures_loaded.push_back(modelData.meshes[meshIndex].textures[t]);
@@ -243,31 +271,32 @@ void ModelFactory::populateModelData(std::string modelFolderName)
 		modelData.meshes[meshIndex].setupMeshData();
 	}
 
-	std::cout << "INFO::ModelFactory:: Model data populated." << std::endl;
+	//std::cout << "INFO::ModelFactory:: Model data populated." << std::endl;
+	log("Model data populated.");
 }
 
-void ModelFactory::loadModel(std::string const& path)
-{
-    if (testing)
-    {
-        //loadModelFile(path);
-    }
-
-    // check if the dir exists
-    int result = FileManager::initDefaultModelDataFolder();
-    if (!result)
-    {
-        std::cout << "INFO::FILEMANAGER:: Model data folder already exists. Checking for files..." << std::endl;
-        //FileManager::checkForModelDataFiles(path);
-        //FileManager::loadDataFile(path);
-        //FileManager::checkForModelDataFiles("");
-    }
-    if (result)
-    {
-        std::cout << "INFO::FILEMANAGER:: Model data folder does not exist, folder will be created now. \n Loading model data from 3d model files, this may take a while..." << std::endl;
-        //loadModelFile(path);
-    }
-}
+//void ModelFactory::loadModel(std::string const& path)
+//{
+//    if (testing)
+//    {
+//        //loadModelFile(path);
+//    }
+//
+//    // check if the dir exists
+//    int result = FileManager::initDefaultModelDataFolder();
+//    if (!result)
+//    {
+//        std::cout << "INFO::FILEMANAGER:: Model data folder already exists. Checking for files..." << std::endl;
+//        //FileManager::checkForModelDataFiles(path);
+//        //FileManager::loadDataFile(path);
+//        //FileManager::checkForModelDataFiles("");
+//    }
+//    if (result)
+//    {
+//        std::cout << "INFO::FILEMANAGER:: Model data folder does not exist, folder will be created now. \n Loading model data from 3d model files, this may take a while..." << std::endl;
+//        //loadModelFile(path);
+//    }
+//}
 
 //std::vector<Texture> ModelFactory::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
 //{
@@ -300,6 +329,7 @@ void ModelFactory::loadModel(std::string const& path)
 //    return textures;
 //}
 
+
 unsigned int ModelFactory::TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
     std::string filename = std::string(path);
@@ -312,7 +342,7 @@ unsigned int ModelFactory::TextureFromFile(const char* path, const std::string& 
     unsigned char* data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
     if (data)
     {
-        GLenum format;
+        GLenum format = NULL;
         if (nrComponents == 1)
             format = GL_RED;
         else if (nrComponents == 3)
@@ -342,7 +372,8 @@ unsigned int ModelFactory::TextureFromFile(const char* path, const std::string& 
 
 std::vector<MeshData::MeshData> ModelFactory::parseModelDataFolder(std::string folderName)
 {
-	std::cout << "Parsing model data in folder: " << folderName << std::endl;
+	//std::cout << "Parsing model data in folder: " << folderName << std::endl;
+	log("Parsing model data in folder: " + folderName);
 
 	namespace fs = std::filesystem;
 
@@ -356,7 +387,8 @@ std::vector<MeshData::MeshData> ModelFactory::parseModelDataFolder(std::string f
 
 		std::ifstream in(entry.path());
 		if (!in) {
-			std::cerr << "Failed to open: " << entry.path() << '\n';
+			//std::cerr << "Failed to open: " << entry.path() << '\n';
+			log("Failed to open: " + entry.path().string(), LogType::ERROR);
 			continue;
 		}
 
@@ -401,7 +433,8 @@ std::vector<MeshData::MeshData> ModelFactory::parseModelDataFolder(std::string f
 						}
 					}
 					catch (const std::exception& e) {
-						std::cerr << "Failed to parse texture coords: " << line << " Error: " << e.what() << '\n';
+						//std::cerr << "Failed to parse texture coords: " << line << " Error: " << e.what() << '\n';
+						log("Failed to parse texture coords: " + line + " Error: " + e.what(), LogType::ERROR);
 					}
 				}
 			}
@@ -413,7 +446,8 @@ std::vector<MeshData::MeshData> ModelFactory::parseModelDataFolder(std::string f
 						meshData.indices.push_back(index);
 					}
 					catch (const std::exception&) {
-						std::cerr << "Failed to parse index: " << line << '\n';
+						//std::cerr << "Failed to parse index: " << line << '\n';
+						log("Failed to parse index: " + line, LogType::ERROR);
 					}
 				}
 			}

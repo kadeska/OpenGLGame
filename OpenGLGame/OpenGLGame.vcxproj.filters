@@ -86,6 +86,9 @@
     <ClInclude Include="src\physics\PhysicsRigidBody.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\Logger.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaderScr\fragment.shader" />

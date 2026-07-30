@@ -9,6 +9,9 @@
 
 #include "mesh/mesh.hpp"
 
+#include "../utils/Logger.hpp"
+using namespace logger;
+
 
 // the necessary data needed to render
 struct ModelData
@@ -47,16 +50,19 @@ public:
     {
         if (modelData.meshes.empty()) 
         {
-            std::cout << "ERROR::MODEL:: No meshes provided in model data." << std::endl;
+            //std::cout << "ERROR::MODEL:: No meshes provided in model data." << std::endl;
+            log("No meshes provided in model data.", LogType::ERROR);
             //loadModel(modelData.modelName);
         }
         else
         {
-            std::cout << "INFO::MODEL:: Meshes provided in model data, loading model data from provided data..." << std::endl;
+            //std::cout << "INFO::MODEL:: Meshes provided in model data, loading model data from provided data..." << std::endl;
+            log("Meshes found in ModelData object, loading model data...");
             this->modelData.meshes = _modelData.meshes;
             this->modelData.textures_loaded = _modelData.textures_loaded;
 			this->modelData.modelName = _modelData.modelName;
 			this->modelName = _modelData.modelName;
+            log("Done loading model data from ModelData object.");
         }
     }
 
@@ -95,6 +101,11 @@ public:
             this->position = pos;
         }
 	}
+
+    std::string getModelName()
+    {
+		return modelName;
+    }
 };
 
 

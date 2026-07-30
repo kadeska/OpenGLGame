@@ -5,9 +5,13 @@
 #include "PhysicsRigidBody.hpp"
 #include <reactphysics3d/mathematics/Transform.h>
 
+#include "../utils/Logger.hpp"
+using namespace logger;
+
 PhysicsManager::PhysicsManager()
 {
-    std::cout << "PhysiscManager constructor" << std::endl;
+    //std::cout << "PhysiscManager constructor" << std::endl;
+    log("PhysicsManager() constructor", LogType::DEBUG);
     createPhyisicsCommonPtr();
 	createPhysicsWorldPtr(getPhysicsCommonPtr());
 }
@@ -66,15 +70,16 @@ void PhysicsManager::updatePhysicsWorld(const double timestep)
 // 
 // 
 //---------------------------------
-// TODO: create a logging system
-// TODO: 
+// TODO: create a logging system (in-progress)
+// TODO: Collition
 //---------------------------------
 
 reactphysics3d::PhysicsCommon* PhysicsManager::getPhysicsCommonPtr()
 {
     if (physicsCommonPtr == nullptr)
     {
-        std::cout << "Error: PhysicsCommon pointer is null." << std::endl;
+        //std::cout << "Error: PhysicsCommon pointer is null." << std::endl;
+        log("PhysicsCommon pointer is null", LogType::ERROR);
         return nullptr;
     }
     return physicsCommonPtr;
@@ -84,7 +89,8 @@ reactphysics3d::PhysicsWorld* PhysicsManager::getPhysicsWorldPtr()
 {
     if (physicsWorldPtr == nullptr)
     {
-        std::cout << "Error: PhysicsWorld pointer is null." << std::endl;
+        //std::cout << "Error: PhysicsWorld pointer is null." << std::endl;
+        log("PhysicsWorld pointer is null", LogType::ERROR);
         return nullptr;
     }
     return physicsWorldPtr;
@@ -94,7 +100,8 @@ reactphysics3d::PhysicsCommon* PhysicsManager::createPhyisicsCommonPtr()
 {
     if (physicsCommonPtr != nullptr) 
     {
-		std::cout << "Error: PhysicsCommon pointer already exists." << std::endl;
+		//std::cout << "Error: PhysicsCommon pointer already exists." << std::endl;
+		log("PhysicsCommon pointer already exists", LogType::ERROR);
 		return physicsCommonPtr;
     }
     physicsCommonPtr = new reactphysics3d::PhysicsCommon();
@@ -105,12 +112,14 @@ reactphysics3d::PhysicsWorld* PhysicsManager::createPhysicsWorldPtr(reactphysics
 {
     if (physicsCommonPtr == nullptr)
     {
-        std::cout << "Error: PhysicsCommon pointer is null. Must create physics common before world." << std::endl;
+        //std::cout << "Error: PhysicsCommon pointer is null. Must create physics common before world." << std::endl;
+        log("PhysicsCommon pointer is null. Must create physics common before world.", LogType::ERROR);
         return nullptr;
     }
     if (physicsWorldPtr != nullptr) 
     {
-        std::cout << "Error: PhysicsWorld pointer already exists." << std::endl;
+        //std::cout << "Error: PhysicsWorld pointer already exists." << std::endl;
+        log("PhysicsWorld pointer already exists.", LogType::ERROR);
         return physicsWorldPtr;
     }
     
@@ -147,7 +156,8 @@ void PhysicsManager::populateArrayOfRigidBodies(std::vector<reactphysics3d::Rigi
         for (int i = 0; i < getPhysicsWorldPtr()->getNbRigidBodies(); i++) 
         {
 			rigidBodies.push_back(getPhysicsWorldPtr()->getRigidBody(i));
-			std::cout << "RigidBody " << i << " added to array." << std::endl;
+			//std::cout << "RigidBody " << i << " added to array." << std::endl;
+            log("RigidBody " + std::to_string(i) + " added to array.", LogType::DEBUG);
         }
     }
 }

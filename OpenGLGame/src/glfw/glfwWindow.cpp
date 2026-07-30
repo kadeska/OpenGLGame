@@ -8,6 +8,8 @@
 #include "../model/ModelInstance.hpp"
 #include "../scene/Scene.hpp"
 
+using namespace logger;
+
 // timing helpers for fixed timestep loop
 static long double previousFrameTime; // = getCurrentSystemTime();
 static long double accumulator; // = 0.0L;
@@ -44,7 +46,8 @@ bool OpenGLGame::GlfwWindow::initGlad()
 	bool result = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     if (!result)
     {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        //std::cout << "Failed to initialize GLAD" << std::endl;
+        log("Failed to initialize GLAD", LogType::ERROR);
     }
     return result;
 }
@@ -54,7 +57,8 @@ bool OpenGLGame::GlfwWindow::initGLFW()
 	bool result = glfwInit();
     if (!result) 
     {
-		std::cout << "Failed to initialize GLFW" << std::endl;
+		//std::cout << "Failed to initialize GLFW" << std::endl;
+		log("Failed to initialize GLFW", LogType::ERROR);
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -65,10 +69,12 @@ bool OpenGLGame::GlfwWindow::initGLFW()
 
 bool OpenGLGame::GlfwWindow::makeShaderProgram()
 {
-	std::cout << "Making shader program..." << std::endl;
+	//std::cout << "Making shader program..." << std::endl;
+    log("Making shader program...");
     myShader = new Shader("vertex.shader", "fragment.shader");
     if (!myShader) {
-        std::cout << "Failed to create shader program" << std::endl;
+        //std::cout << "Failed to create shader program" << std::endl;
+        log("Failed to create shader program", LogType::ERROR);
     }
     return (myShader != nullptr);
 }
@@ -89,7 +95,8 @@ void OpenGLGame::GlfwWindow::render()
     {
         if (myShader == nullptr) 
         {
-			std::cout << "[!Warning!] | GlfwWindow::render() | Shader is nullptr, cannot render!" << std::endl;
+			//std::cout << "[!Warning!] | GlfwWindow::render() | Shader is nullptr, cannot render!" << std::endl;
+            log("Shader is nullptr, cannot render!", LogType::ERROR);
             return;
         }
         myShader->use();
@@ -128,7 +135,8 @@ void OpenGLGame::GlfwWindow::render()
     }
     else 
     {
-		std::cout << "[!Warning!] | GlfwWindow::render() | Scene is nullptr, cannot render!" << std::endl;
+		//std::cout << "[!Warning!] | GlfwWindow::render() | Scene is nullptr, cannot render!" << std::endl;
+        log("Scene is nullptr, cannot render!", LogType::ERROR);
         shouldRender = false;
         return;
     }
@@ -158,7 +166,8 @@ bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
     window = glfwCreateWindow(width, height, title, NULL, NULL);
     if (window == nullptr)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
+        //std::cout << "Failed to create GLFW window" << std::endl;
+        log("Failed to create GLFW window", LogType::ERROR);
         glfwTerminate();
         return false;
     }
@@ -183,7 +192,8 @@ bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
     // make shader
     if (!makeShaderProgram()) 
     {
-		std::cout << "Failed to create shader program" << std::endl;
+		//std::cout << "Failed to create shader program" << std::endl;
+        log("Failed to create shader program", LogType::ERROR);
     }
 
     // load models
@@ -211,7 +221,8 @@ bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
     // add a check here if the scene is null then we can send a debug message
     if (scene == nullptr)
     {
-        std::cout << "[!Warning!] Scene is nullptr!" << std::endl;
+        //std::cout << "[!Warning!] Scene is nullptr!" << std::endl;
+        log("Scene is nullptr!", LogType::ERROR);
     }
 
 	return true;

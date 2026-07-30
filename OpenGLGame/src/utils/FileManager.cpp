@@ -4,6 +4,8 @@
 #include <filesystem>
 //#include <map>
 
+#include "../utils/Logger.hpp"
+using namespace logger;
 
 
 // --- Global/Static Data ---
@@ -20,6 +22,11 @@ std::string FileManager::getDefaultModelDataDir()
 	return defaults.defaultModelDataDir;
 }
 
+std::string FileManager::getActiveModelDataDir()
+{
+	return defaults.defaultModelDataDir;
+}
+
 void FileManager::createModelDataFolder()
 {
 	if (!std::filesystem::create_directories(defaults.defaultModelDataDir)) {}
@@ -29,11 +36,13 @@ bool FileManager::initDefaultModelDataFolder()
 {
     if (!std::filesystem::create_directories(defaults.defaultModelDataDir)) 
     {
-        std::cout << "Directory already exists: " << defaults.defaultModelDataDir << std::endl;
+        //std::cout << "Directory already exists: " << defaults.defaultModelDataDir << std::endl;
+		log("Directory already exists: " + defaults.defaultModelDataDir, LogType::DEBUG);
 		return false;
     }
 
-	std::cout << "Directory created: " << defaults.defaultModelDataDir << std::endl;
+	//std::cout << "Directory created: " << defaults.defaultModelDataDir << std::endl;
+	log("Directory created: " + defaults.defaultModelDataDir, LogType::DEBUG);
     return true;
 }
 
@@ -42,7 +51,8 @@ bool FileManager::saveDataToFileAtPath(const std::string _filename = "default", 
 	std::ofstream file(_path + "/" + _filename);
 	if (!file)
 	{
-		std::cout << "Failed to open file: " << _path + "/" + _filename << std::endl;
+		//std::cout << "Failed to open file: " << _path + "/" + _filename << std::endl;
+		log("Failed to open file: " + _path + "/" + _filename, LogType::DEBUG);
 		return false;
 	}
 	file << _Data;
@@ -51,7 +61,9 @@ bool FileManager::saveDataToFileAtPath(const std::string _filename = "default", 
 }
 
 // --- File Existence/Check Functions ---
-bool FileManager::exists(std::string filename_path) // takes a filename or path and checks if it exists in the default model data directory
+
+// takes a filename or path and checks if it exists in the default model data directory
+bool FileManager::exists(std::string filename_path) 
 {
     std::filesystem::path p = defaults.defaultModelDataDir + "/" + filename_path;
 	return std::filesystem::exists(p);
@@ -60,22 +72,15 @@ bool FileManager::exists(std::string filename_path) // takes a filename or path 
 bool FileManager::checkForModelDataFile(std::string filename)
 {
 	// cheack if the path exists
-	if (!exists(filename)) // treat this filename as a folder name
+	if (!exists(filename)) 
 	{
-		std::cout << "Model data folder not found for model: " << filename << " at path: " << defaults.defaultModelDataDir << std::endl;
+		//std::cout << "Model data folder not found for model: " << filename << " at path: " << defaults.defaultModelDataDir << std::endl;
+		log("Model data folder not found for model: " + filename + " at path: " + defaults.defaultModelDataDir, LogType::DEBUG);
 		return false;
 	}
-	// 
-	// Actually now we need to loop through the files in this folder and for each file, make a Mesh object from its data.
-	// 
-	// check if the file exists
-	//if (!std::filesystem::exists(defaults.defaultModelDataDir + "/" + filename))
-	//{
-	//	std::cout << "Model data folder not found for model: " << filename << " at path: " << defaults.defaultModelDataDir << std::endl;
-	//	return false;
-	//}
 
-	std::cout << "Model data file found for model: " << filename << " at path: " << defaults.defaultModelDataDir << std::endl;
+	//std::cout << "Model data file found for model: " << filename << " at path: " << defaults.defaultModelDataDir << std::endl;
+	log("Model data file found for model: " + filename + " at path: " + defaults.defaultModelDataDir, LogType::DEBUG);
 	return true;
 }
 
@@ -83,10 +88,12 @@ bool FileManager::checkForModelDataFolder(std::string folderName)
 {
 	if(!exists(folderName + "/"))
 	{
-		std::cout << "Model data folder not found for model: " << folderName << " at path: " << defaults.defaultModelDataDir << std::endl;
+		//std::cout << "DEBUG::| Model data folder not found for model: " << folderName << " at path: " << defaults.defaultModelDataDir << std::endl;
+		log("Model data folder not found for model: " + folderName + " at path: " + defaults.defaultModelDataDir, LogType::DEBUG);
 		return false;
 	}
-	std::cout << "Model data folder found for model: " << folderName << " at path: " << defaults.defaultModelDataDir << std::endl;
+	//std::cout << "Model data folder found for model: " << folderName << " at path: " << defaults.defaultModelDataDir << std::endl;
+	log("Model data folder found for model: " + folderName + " at path: " + defaults.defaultModelDataDir, LogType::DEBUG);
 	return true;
 }
 
@@ -129,5 +136,6 @@ void FileManager::clearBuffer()
 
 void FileManager::printBuffer()
 {
-    std::cout << "Buffer content:\n" << fileBuffer << std::endl;
+    //std::cout << "Buffer content:\n" << fileBuffer << std::endl;
+	log("Buffer content:\n" + fileBuffer);
 }
