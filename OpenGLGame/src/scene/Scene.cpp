@@ -10,6 +10,10 @@ using namespace logger;
 
 PhysicsManager* physicsManager;
 
+rp3d::RigidBody* floorBody = nullptr;
+rp3d::Collider* floorCollider = nullptr;
+rp3d::BoxShape* floorShape = nullptr;
+
 Scene::Scene()
 {
 	//std::cout << "[Scene()] Creating scene..." << std::endl;
@@ -35,6 +39,8 @@ Scene::~Scene()
 	log("Destroying scene...");
 }
 
+
+
 void Scene::populateScene()
 {
 
@@ -49,20 +55,20 @@ void Scene::populateScene()
 	}
 
 	// create a floor
-	rp3d::Vector3 floorPosition(0.0f, -5.0f, 0.0f);
+	rp3d::Vector3 floorPosition(0.0f, -30.0f, 0.0f);
 	rp3d::Quaternion floorOrientation = rp3d::Quaternion::identity();
 	rp3d::Transform floorTransform(floorPosition, floorOrientation);
 
 	// Create a box shape for the floor (width, height, depth)
-	rp3d::Vector3 extent(20.0f, 1.0f, 20.0f);
+	rp3d::Vector3 extent(500.0f, 1.0f, 500.0f);
 	rp3d::PhysicsCommon physicsCommon;
-	rp3d::BoxShape* floorShape = physicsCommon.createBoxShape(extent);
+	floorShape = physicsCommon.createBoxShape(extent);
 
 	// Create the rigid body for the floor
-	rp3d::RigidBody* floorBody = physicsManager->getPhysicsWorldPtr()->createRigidBody(floorTransform);
+	floorBody = physicsManager->getPhysicsWorldPtr()->createRigidBody(floorTransform);
 
 	// Add the collider to the rigid body
-	rp3d::Collider* floorCollider = floorBody->addCollider(floorShape, rp3d::Transform::identity());
+	floorCollider = floorBody->addCollider(floorShape, rp3d::Transform::identity());
 
 	// Set the rigid body to be static
 	floorBody->setType(rp3d::BodyType::STATIC);
@@ -86,11 +92,24 @@ void Scene::populateScene()
 	//physicsWorld->getWorld()->
 
 
+	// after the models are loaded create the rigid bodies for each model.
+
+	for (int i = 0; i < models.size(); i++)
+	{
+		ModelInstance::ModelInstance* modelInstance = models[i];
+		if (modelInstance != nullptr)
+		{
+			physicsManager->createRigidBodyForModelInstance(modelInstance);
+		}
+	}
+
+	log("Done populating scene.");
+
 }
 
 // physics sim 
 
-void Scene::updatePhysicsWorld(const double timestep)
+void Scene::updatePhysicsWorld(const double timestep, const float factor)
 {
 	if (physicsManager == nullptr) 
 	{
@@ -99,23 +118,28 @@ void Scene::updatePhysicsWorld(const double timestep)
 		return;
 	}
 
-	//physicsManager->getPhysicsWorldPtr()->update(timestep);
-	physicsManager->updatePhysicsWorld(timestep);
+	physicsManager->updatePhysicsWorld(timestep, factor);
 
-	for (int i = 0; i < models.size(); i++)
-	{
-		ModelInstance::ModelInstance* modelInstance = models[i];
-		if ((modelInstance != nullptr) && (modelInstance->model != NULL) && (modelInstance->rigidBody != nullptr))
-		{
-			//rp3d::Transform transform = modelInstance->rigidBody->getTransform();
-			//rp3d::Vector3 position = transform.getPosition();
-			//modelInstance->position = glm::vec3(position.x, position.y, position.z);
-			// Get the updated position of the body
-	        const reactphysics3d::Transform& transform = modelInstance->rigidBody->getTransform();
-	        const reactphysics3d::Vector3& position = transform.getPosition();
-			modelInstance->model->setPosition(glm::vec3(position.x, position.y, position.z));
-		}
-	}
+	
+
+
+	//physicsManager->getPhysicsWorldPtr()->update(timestep);
+	//physicsManager->updatePhysicsWorld(timestep, factor);
+
+	//for (int i = 0; i < models.size(); i++)
+	//{
+	//	ModelInstance::ModelInstance* modelInstance = models[i];
+	//	if ((modelInstance != nullptr) && (modelInstance->model != NULL) && (modelInstance->rigidBody != nullptr))
+	//	{
+	//		//rp3d::Transform transform = modelInstance->rigidBody->getTransform();
+	//		//rp3d::Vector3 position = transform.getPosition();
+	//		//modelInstance->position = glm::vec3(position.x, position.y, position.z);
+	//		// Get the updated position of the body
+	//        const reactphysics3d::Transform& transform = modelInstance->rigidBody->getTransform();
+	//        const reactphysics3d::Vector3& position = transform.getPosition();
+	//		modelInstance->model->setPosition(glm::vec3(position.x, position.y, position.z));
+	//	}
+	//}
 
 	//physicsManager->populateArrayOfRigidBodies(physicsManager->getArrayOfRigidBodies());
 }

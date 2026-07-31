@@ -102,7 +102,7 @@ public:
         }
 	}
 
-    std::string getModelName()
+    std::string getName()
     {
 		return modelName;
     }

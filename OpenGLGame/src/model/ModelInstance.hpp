@@ -24,9 +24,12 @@ namespace ModelInstance
     {
         Model* model;
         reactphysics3d::RigidBody* rigidBody;
+        reactphysics3d::SphereShape* sphereShape;
+        reactphysics3d::Collider* collider;
         rp3d::PhysicsWorld* physicsWorldptr;
         glm::vec3 position;
         glm::vec3 scale;
+        float colliderSphereRadius = 3.0f;
         //MyRigidBody* rigidBody = nullptr;
         ModelInstance(const char* modelName, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 scl = glm::vec3(1.0f), rp3d::PhysicsWorld* physicsWorldptr = nullptr)
             : position(pos), scale(scl), physicsWorldptr(physicsWorldptr)
@@ -61,6 +64,8 @@ namespace ModelInstance
 			rigidBody = physicsWorldptr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(position.x, position.y, position.z), reactphysics3d::Quaternion::identity()));
 			rigidBody->setType(reactphysics3d::BodyType::DYNAMIC);
 
+			//physicsManager->createRigidBodyForModelInstance(this);
+
 			//rigidBody = new MyRigidBody(rp3d::Vector3(position.x, position.y, position.z), physicsWorldptr, model->getPtrIndex());
         }
 
@@ -71,10 +76,23 @@ namespace ModelInstance
             model->setPosition(glm::vec3(pos.x, pos.y, pos.z));
         }
 
+		std::string getModelName()
+		{
+			if (model)
+			{
+				return model->getName();
+			}
+			else
+			{
+				return "null";
+			}
+		}
+
         ~ModelInstance()
         {
             if (model) delete model;
         }
+
     };
 
     glm::vec3 getTransform(const ModelInstance modelInstance);

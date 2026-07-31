@@ -257,46 +257,21 @@ void OpenGLGame::GlfwWindow::startRender()
         // Add the time difference in the accumulator
         accumulator += frameDeltaTime;
 
+        float factor = accumulator / timestep;
+
         while (accumulator >= timestep)
         {
             // update the physics world.
             // This function will perform the physics simulation step.
-            scene->updatePhysicsWorld(timestep);
+            
+            scene->updatePhysicsWorld(timestep, factor);
 
             accumulator -= timestep;
         }
         // Compute the time interpolation factor
-        float factor = accumulator / timestep;
+        
 
-        for (ModelInstance::ModelInstance* modInst : scene->getModels())
-        {
-			// physics sim step has been compleated at this point, but we still need to update the models positions based on the physics simulation results, and we also need to compute the interpolated transform of the rigid body for rendering.
-            // 
-			// get the previous position of the body before updating it with the physics simulation results, this is needed for interpolation.
-
-            rp3d::Transform prevTransform;
-			prevTransform.setPosition(rp3d::Vector3(modInst->position.x, modInst->position.y, modInst->position.z));
-
-
-            // Get the current position of the rigid body that was calculated by the physics sim step.
-
-			// this transform is the one that is updated by the physics simulation step, so it will have the new position and orientation of the body after the physics simulation step.
-            //-------------------------------------------------------------------------------------
-            // \/ \/ \/ \/
-            //const rp3d::Transform& currTransform = modInst->rigidBody->getRigidBodyPtr()->getTransform();
-            //const rp3d::Vector3& position = currTransform.getPosition();
-
-            //modInst->position = glm::vec3(position.x, position.y, position.z);
-
-            // Compute the interpolated transform of the rigid body
-            //rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevTransform, currTransform, factor);
-
-            // now update the model instance position with the interpolated transform position for rendering.
-			//modInst->position = glm::vec3(interpolatedTransform.getPosition().x, interpolatedTransform.getPosition().y, interpolatedTransform.getPosition().z);
-
-            // Display the position of the body
-            //std::cout << "Body Position: (" << position.x << ", " << position.y << ", " << position.z << ")" << std::endl;
-        }
+        
 
         // Now you can render your body using the new transform
 

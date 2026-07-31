@@ -20,6 +20,6 @@ public:
 	//void update(const double dt);
 
 	// physics sim
-	void updatePhysicsWorld(const double timestep);
+	void updatePhysicsWorld(const double timestep, const float factor);
 };
 

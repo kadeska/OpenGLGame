@@ -7,14 +7,14 @@
 class PhysicsManager
 {
 public:
-	const float gravity = -9.81f;
+	const float gravity = -0.85f;
 	const int velocitySolverNbIterations = 20;
 public:
 	PhysicsManager();
 	~PhysicsManager() = default;
     int test();
 
-	void updatePhysicsWorld(const double timestep);
+	void updatePhysicsWorld(const double timestep, const float factor);
 
 	reactphysics3d::PhysicsCommon* getPhysicsCommonPtr();
 	reactphysics3d::PhysicsWorld* getPhysicsWorldPtr();

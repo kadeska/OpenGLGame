@@ -151,7 +151,6 @@
     <ClCompile Include="src\glfw\glfwWindow.cpp" />
     <ClCompile Include="src\model\MeshData.hpp" />
     <ClCompile Include="src\model\ModelFactory.cpp" />
-    <ClCompile Include="src\physics\PhysicsRigidBody.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\stb_image_impl.cpp" />
     <ClCompile Include="src\utils\FileManager.cpp" />
@@ -165,7 +164,6 @@
     <ClInclude Include="src\model\model.hpp" />
     <ClInclude Include="src\model\ModelFactory.hpp" />
     <ClInclude Include="src\model\ModelInstance.hpp" />
-    <ClInclude Include="src\physics\PhysicsRigidBody.hpp" />
     <ClInclude Include="src\scene\Scene.hpp" />
     <ClInclude Include="src\shader.hpp" />
     <ClInclude Include="src\stbimage\stbimp.h" />

@@ -2,7 +2,7 @@
 #include <reactphysics3d/reactphysics3d.h>
 #include <iostream>
 
-#include "PhysicsRigidBody.hpp"
+//#include "PhysicsRigidBody.hpp"
 #include <reactphysics3d/mathematics/Transform.h>
 
 #include "../utils/Logger.hpp"
@@ -58,12 +58,46 @@ int PhysicsManager::test()
     return 0;
 }
 
-void PhysicsManager::updatePhysicsWorld(const double timestep)
+void PhysicsManager::updatePhysicsWorld(const double timestep, const float factor)
 {
     if (physicsWorldPtr != nullptr)
     {
         physicsWorldPtr->update(timestep);
 		// update model instance positions based on the physics simulation results.
+
+        for (ModelInstance::ModelInstance* modInst : modelInstances)
+        {
+            // physics sim step has been compleated at this point, but we still need to update the models positions based on the physics simulation results, and we also need to compute the interpolated transform of the rigid body for rendering.
+            // 
+            // get the previous position of the body before updating it with the physics simulation results, this is needed for interpolation.
+
+            // this transform is the last transform of the model.
+            rp3d::Transform prevModelTransform;
+            prevModelTransform.setPosition(rp3d::Vector3(modInst->position.x, modInst->position.y, modInst->position.z));
+
+
+            // Get the current position of the rigid body that was calculated by the physics sim step.
+
+            // this transform is the one that is updated by the physics simulation step, so it will have the new position and orientation of the body after the physics simulation step.
+            //-------------------------------------------------------------------------------------
+            // \/ \/ \/ \/
+            // current transform of the rigid body after the physics simulation step.
+            rp3d::Transform currRigidBodyTransform = modInst->rigidBody->getTransform();
+            // position of the model instance before 
+            rp3d::Vector3 position = currRigidBodyTransform.getPosition();
+
+            //modInst->position = glm::vec3(position.x, position.y, position.z);
+
+            // Compute the interpolated transform of the rigid body
+            rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevModelTransform, currRigidBodyTransform, factor);
+
+            // now update the model instance position with the interpolated transform position for rendering.
+            modInst->position = glm::vec3(interpolatedTransform.getPosition().x, interpolatedTransform.getPosition().y, interpolatedTransform.getPosition().z);
+
+            // Display the position of the body
+            std::cout << "Body Position: (" << modInst->position.x << ", " << modInst->position.y << ", " << modInst->position.z << ")" << std::endl;
+        }
+
     }
 }
 //
@@ -164,9 +198,16 @@ void PhysicsManager::populateArrayOfRigidBodies(std::vector<reactphysics3d::Rigi
 
 void PhysicsManager::createRigidBodyForModelInstance(ModelInstance::ModelInstance* modelInstance)
 {
+    log("Creating rigid body for model: " + modelInstance->getModelName());
 	modelInstance->rigidBody = physicsWorldPtr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(modelInstance->position.x, modelInstance->position.y, modelInstance->position.z), reactphysics3d::Quaternion::identity()));
 
+	modelInstance->rigidBody->setType(reactphysics3d::BodyType::DYNAMIC);
+	//modelInstance->rigidBody->enableGravity(true);
 
+    
+    modelInstance->sphereShape = physicsCommonPtr->createSphereShape(modelInstance->colliderSphereRadius); // createSphereCollisionShape(radius);
+	reactphysics3d::Transform colliderTransform = reactphysics3d::Transform::identity(); // No offset for the collider
+    modelInstance->collider = modelInstance->rigidBody->addCollider(modelInstance->sphereShape, colliderTransform);
 }
 
 std::vector<reactphysics3d::RigidBody*>& PhysicsManager::getArrayOfRigidBodies()
