@@ -30,6 +30,7 @@ namespace ModelInstance
         glm::vec3 position;
         glm::vec3 scale;
         float colliderSphereRadius = 3.0f;
+        rp3d::Transform prevRigidBodyTransform = rp3d::Transform::identity();
         //MyRigidBody* rigidBody = nullptr;
         ModelInstance(const char* modelName, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 scl = glm::vec3(1.0f), rp3d::PhysicsWorld* physicsWorldptr = nullptr)
             : position(pos), scale(scl), physicsWorldptr(physicsWorldptr)
@@ -63,6 +64,9 @@ namespace ModelInstance
             // create rigidbody at position and add it to the physics world
 			rigidBody = physicsWorldptr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(position.x, position.y, position.z), reactphysics3d::Quaternion::identity()));
 			rigidBody->setType(reactphysics3d::BodyType::DYNAMIC);
+
+			// Initialize the previous rigid body transform for interpolation
+			prevRigidBodyTransform = rigidBody->getTransform();
 
 			//physicsManager->createRigidBodyForModelInstance(this);
 

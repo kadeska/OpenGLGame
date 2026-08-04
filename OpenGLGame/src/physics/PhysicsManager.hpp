@@ -28,6 +28,8 @@ public:
 	std::vector<reactphysics3d::RigidBody*>& getArrayOfRigidBodies();
 	std::vector<ModelInstance::ModelInstance*>& getArrayOfModelInstances();
 
+	void addModelInstance(ModelInstance::ModelInstance* modelInstance);
+
 private:
 	// First you need to create the PhysicsCommon object.
 	// This is a factory module that you can use to create physics

@@ -257,18 +257,20 @@ void OpenGLGame::GlfwWindow::startRender()
         // Add the time difference in the accumulator
         accumulator += frameDeltaTime;
 
-        float factor = accumulator / timestep;
-
+        // Step the physics simulation for all fixed timesteps
         while (accumulator >= timestep)
         {
-            // update the physics world.
-            // This function will perform the physics simulation step.
-            
-            scene->updatePhysicsWorld(timestep, factor);
+            // Perform the physics simulation step (no interpolation during stepping)
+            scene->updatePhysicsWorld(timestep, 1.0f);
 
             accumulator -= timestep;
         }
-        // Compute the time interpolation factor
+
+        // Calculate the interpolation factor for rendering
+        // This represents how far into the next physics timestep we are
+        // factor = 0.0 means we're at the previous physics frame
+        // factor = 1.0 means we're at the current physics frame (shouldn't reach exactly 1.0)
+        float renderFactor = accumulator / timestep;
         
 
         

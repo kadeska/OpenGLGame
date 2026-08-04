@@ -55,23 +55,23 @@ void Scene::populateScene()
 	}
 
 	// create a floor
-	rp3d::Vector3 floorPosition(0.0f, -30.0f, 0.0f);
-	rp3d::Quaternion floorOrientation = rp3d::Quaternion::identity();
-	rp3d::Transform floorTransform(floorPosition, floorOrientation);
+	//rp3d::Vector3 floorPosition(0.0f, -30.0f, 0.0f);
+	//rp3d::Quaternion floorOrientation = rp3d::Quaternion::identity();
+	//rp3d::Transform floorTransform(floorPosition, floorOrientation);
 
-	// Create a box shape for the floor (width, height, depth)
-	rp3d::Vector3 extent(500.0f, 1.0f, 500.0f);
-	rp3d::PhysicsCommon physicsCommon;
-	floorShape = physicsCommon.createBoxShape(extent);
+	//// Create a box shape for the floor (width, height, depth)
+	//rp3d::Vector3 extent(500.0f, 1.0f, 500.0f);
+	//rp3d::PhysicsCommon physicsCommon;
+	//floorShape = physicsCommon.createBoxShape(extent);
 
-	// Create the rigid body for the floor
-	floorBody = physicsManager->getPhysicsWorldPtr()->createRigidBody(floorTransform);
+	//// Create the rigid body for the floor
+	//floorBody = physicsManager->getPhysicsWorldPtr()->createRigidBody(floorTransform);
 
-	// Add the collider to the rigid body
-	floorCollider = floorBody->addCollider(floorShape, rp3d::Transform::identity());
+	//// Add the collider to the rigid body
+	//floorCollider = floorBody->addCollider(floorShape, rp3d::Transform::identity());
 
-	// Set the rigid body to be static
-	floorBody->setType(rp3d::BodyType::STATIC);
+	//// Set the rigid body to be static
+	//floorBody->setType(rp3d::BodyType::STATIC);
 
 
 	// 
@@ -100,6 +100,7 @@ void Scene::populateScene()
 		if (modelInstance != nullptr)
 		{
 			physicsManager->createRigidBodyForModelInstance(modelInstance);
+			physicsManager->addModelInstance(modelInstance);
 		}
 	}
 

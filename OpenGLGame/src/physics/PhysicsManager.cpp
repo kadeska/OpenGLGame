@@ -16,90 +16,56 @@ PhysicsManager::PhysicsManager()
 	createPhysicsWorldPtr(getPhysicsCommonPtr());
 }
 
-int PhysicsManager::test()
-{
-
-    // First you need to create the PhysicsCommon object.
-    // This is a factory module that you can use to create physics
-    // world and other objects. It is also responsible for
-    // logging and memory management
-    //reactphysics3d::PhysicsCommon physicsCommon;
-
-    // Create a physics world
-    //reactphysics3d::PhysicsWorld* world = physicsCommon->createPhysicsWorld();
-    //physicsWorldPtr = physicsCommonPtr->createPhysicsWorld();
-
-    //// Create a rigid body in the world
-    //reactphysics3d::Vector3 position(0, 20, 0);
-    //reactphysics3d::Quaternion orientation = reactphysics3d::Quaternion::identity();
-    //reactphysics3d::Transform transform(position, orientation);
-    //reactphysics3d::RigidBody* body = physicsWorldPtr->createRigidBody(transform);
-
-    //const reactphysics3d::decimal timeStep = 1.0f / 60.0f;
-
-    //// Step the simulation a few steps
-    //for (int i = 0; i < 20; i++) {
-
-    //    physicsWorldPtr->update(timeStep);
-
-    //    // Get the updated position of the body
-    //    const reactphysics3d::Transform& transform = body->getTransform();
-    //    const reactphysics3d::Vector3& position = transform.getPosition();
-
-    //    // Display the position of the body
-    //    std::cout << "Body Position: (" << position.x << ", " <<
-    //        position.y << ", " << position.z << ")" << std::endl;
-    //}
-
-
-    //PhysicsRigidBody rigidbody = PhysicsRigidBody(getPhysicsWorldPtr());
-
-
-    return 0;
-}
 
 void PhysicsManager::updatePhysicsWorld(const double timestep, const float factor)
 {
-    if (physicsWorldPtr != nullptr)
-    {
-        physicsWorldPtr->update(timestep);
+	if (physicsWorldPtr != nullptr)
+	{
+		// physics world update call
+		physicsWorldPtr->update(timestep);
 		// update model instance positions based on the physics simulation results.
 
-        for (ModelInstance::ModelInstance* modInst : modelInstances)
-        {
-            // physics sim step has been compleated at this point, but we still need to update the models positions based on the physics simulation results, and we also need to compute the interpolated transform of the rigid body for rendering.
-            // 
-            // get the previous position of the body before updating it with the physics simulation results, this is needed for interpolation.
+		for (ModelInstance::ModelInstance* modInst : modelInstances)
+		{
+			// Null check for rigid body
+			if (modInst->rigidBody == nullptr)
+			{
+				continue;
+			}
 
-            // this transform is the last transform of the model.
-            rp3d::Transform prevModelTransform;
-            prevModelTransform.setPosition(rp3d::Vector3(modInst->position.x, modInst->position.y, modInst->position.z));
+			// Get the current transform of the rigid body after the physics simulation step
+			rp3d::Transform currRigidBodyTransform = modInst->rigidBody->getTransform();
 
+			// Compute the interpolated transform between the previous physics frame and the current physics frame
+			// factor represents how far through the current accumulator we are (0 to 1)
+			// When factor is 1.0, we just completed a physics step, so use the current transform
+			// When factor is 0.0-1.0, we're between physics frames, so interpolate
+			rp3d::Transform interpolatedTransform;
+			if (factor >= 1.0f)
+			{
+				// We just completed a physics step, use the current transform
+				interpolatedTransform = currRigidBodyTransform;
+			}
+			else
+			{
+				// Interpolate between previous and current transforms
+				interpolatedTransform = rp3d::Transform::interpolateTransforms(modInst->prevRigidBodyTransform, currRigidBodyTransform, factor);
+			}
 
-            // Get the current position of the rigid body that was calculated by the physics sim step.
+			// Update the model instance position with the interpolated transform for rendering
+			rp3d::Vector3 interpolatedPos = interpolatedTransform.getPosition();
+			modInst->position = glm::vec3(interpolatedPos.x, interpolatedPos.y, interpolatedPos.z);
 
-            // this transform is the one that is updated by the physics simulation step, so it will have the new position and orientation of the body after the physics simulation step.
-            //-------------------------------------------------------------------------------------
-            // \/ \/ \/ \/
-            // current transform of the rigid body after the physics simulation step.
-            rp3d::Transform currRigidBodyTransform = modInst->rigidBody->getTransform();
-            // position of the model instance before 
-            rp3d::Vector3 position = currRigidBodyTransform.getPosition();
+			// Store the current transform as the previous for the next frame
+			modInst->prevRigidBodyTransform = currRigidBodyTransform;
 
-            //modInst->position = glm::vec3(position.x, position.y, position.z);
+			// Display the position of the body
+			std::cout << "Body Position: (" << modInst->position.x << ", " << modInst->position.y << ", " << modInst->position.z << ")" << std::endl;
+		}
 
-            // Compute the interpolated transform of the rigid body
-            rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevModelTransform, currRigidBodyTransform, factor);
-
-            // now update the model instance position with the interpolated transform position for rendering.
-            modInst->position = glm::vec3(interpolatedTransform.getPosition().x, interpolatedTransform.getPosition().y, interpolatedTransform.getPosition().z);
-
-            // Display the position of the body
-            std::cout << "Body Position: (" << modInst->position.x << ", " << modInst->position.y << ", " << modInst->position.z << ")" << std::endl;
-        }
-
-    }
+	}
 }
+
 //
 // 
 // 
@@ -218,4 +184,9 @@ std::vector<reactphysics3d::RigidBody*>& PhysicsManager::getArrayOfRigidBodies()
 std::vector<ModelInstance::ModelInstance*>& PhysicsManager::getArrayOfModelInstances()
 {
     return modelInstances;
+}
+
+void PhysicsManager::addModelInstance(ModelInstance::ModelInstance* modelInstance)
+{
+    modelInstances.push_back(modelInstance);
 }
