@@ -29,7 +29,10 @@ private:
     // This is used to easily remove this model from the loaded models vector when this model is destroyed, 
     // and to check if this model is already loaded in the model factory when creating a new model.
     int ptrIndex = -1; 
+    
+
 public:
+    bool floor = false;
 	bool loadSuccessful = false;
 
     // model data 
@@ -48,6 +51,8 @@ public:
     // constructor, expects a filepath to a 3D model.
     Model(ModelData _modelData)
     {
+        floor = (modelData.modelName == "floor");
+
         if (modelData.meshes.empty()) 
         {
             //std::cout << "ERROR::MODEL:: No meshes provided in model data." << std::endl;
@@ -70,7 +75,7 @@ public:
     // draws the model, and thus all its meshes
     void Draw(Shader* shader)
     {
-        if (loadSuccessful) 
+        if (loadSuccessful && !floor) 
         {
             for (unsigned int i = 0; i < this->modelData.meshes.size(); i++)
                 this->modelData.meshes[i].Draw(shader);

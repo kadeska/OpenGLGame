@@ -80,6 +80,16 @@ Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
 
 	folderName = modelFolderName;
 
+	// check if the model name is "floor" if so then make a floor. 
+	//if (modelFolderName == "floor") 
+	//{
+	//	// 
+		makeFloor();
+	//	return modelPtr;
+	//}
+
+
+
     if (constructModelObjectFromDataFolder(modelFolderName))
     {
 		// model was successfully constructed from file, return the model
@@ -273,6 +283,13 @@ void ModelFactory::populateModelData(std::string modelFolderName)
 
 	//std::cout << "INFO::ModelFactory:: Model data populated." << std::endl;
 	log("Model data populated.");
+}
+
+void ModelFactory::makeFloor()
+{
+	ModelData floorModelData;              // The model data gets copied into the Model class, dont worry about making it a global variable.
+	floorModelData.modelName = "Floor";
+	modelPtr = new Model(floorModelData);
 }
 
 //void ModelFactory::loadModel(std::string const& path)

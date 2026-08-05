@@ -39,6 +39,7 @@ private:
 	bool constructModelObjectFromDataFolder(std::string modelFolderName);
 	bool constructModelObjectFrom3dFile(std::string filename);
 	void populateModelData(std::string filename);
+	void makeFloor();
 
 	//void processNode(aiNode* node, const aiScene* scene);
 

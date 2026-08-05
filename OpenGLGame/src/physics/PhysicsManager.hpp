@@ -30,6 +30,8 @@ public:
 
 	void addModelInstance(ModelInstance::ModelInstance* modelInstance);
 
+	void makeFloor(ModelInstance::ModelInstance* modelInstance);
+
 private:
 	// First you need to create the PhysicsCommon object.
 	// This is a factory module that you can use to create physics

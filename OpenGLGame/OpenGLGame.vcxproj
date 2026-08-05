@@ -152,6 +152,7 @@
     <ClCompile Include="src\model\MeshData.hpp" />
     <ClCompile Include="src\model\ModelFactory.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
+    <ClCompile Include="src\scene\SceneManager.cpp" />
     <ClCompile Include="src\stb_image_impl.cpp" />
     <ClCompile Include="src\utils\FileManager.cpp" />
   </ItemGroup>
@@ -165,6 +166,7 @@
     <ClInclude Include="src\model\ModelFactory.hpp" />
     <ClInclude Include="src\model\ModelInstance.hpp" />
     <ClInclude Include="src\scene\Scene.hpp" />
+    <ClInclude Include="src\scene\SceneManager.hpp" />
     <ClInclude Include="src\shader.hpp" />
     <ClInclude Include="src\stbimage\stbimp.h" />
     <ClInclude Include="src\utils\FileManager.hpp" />

@@ -76,7 +76,15 @@ void Scene::populateScene()
 
 	// 
 	//models.push_back(new ModelInstance::ModelInstance("backpack", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr()));
-	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr()));
+	
+	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(0.0f, 34.0f, 0.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(0.0f, 64.0f, 0.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	
+	
+	models.push_back(new ModelInstance::ModelInstance("floor", glm::vec3(0.0f, -15.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr(), false));
+
+	
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 
@@ -101,6 +109,11 @@ void Scene::populateScene()
 		{
 			physicsManager->createRigidBodyForModelInstance(modelInstance);
 			physicsManager->addModelInstance(modelInstance);
+
+			if (modelInstance->getModelName() == "floor") 
+			{
+				physicsManager->makeFloor(modelInstance);
+			}
 		}
 	}
 

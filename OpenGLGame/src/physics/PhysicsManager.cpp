@@ -30,8 +30,14 @@ void PhysicsManager::updatePhysicsWorld(const double timestep, const float facto
 			// Null check for rigid body
 			if (modInst->rigidBody == nullptr)
 			{
-				continue;
+				log("ModelInstance has no rigid body. Skipping update for this instance.", LogType::WARNING);
+                return;
 			}
+
+            if (modInst->rigidBody->getType() == rp3d::BodyType::STATIC) 
+            {
+				return; // Skip static bodies as they don't move
+            }
 
 			// Get the current transform of the rigid body after the physics simulation step
 			rp3d::Transform currRigidBodyTransform = modInst->rigidBody->getTransform();
@@ -60,7 +66,7 @@ void PhysicsManager::updatePhysicsWorld(const double timestep, const float facto
 			modInst->prevRigidBodyTransform = currRigidBodyTransform;
 
 			// Display the position of the body
-			std::cout << "Body Position: (" << modInst->position.x << ", " << modInst->position.y << ", " << modInst->position.z << ")" << std::endl;
+			//std::cout << "Body Position: (" << modInst->position.x << ", " << modInst->position.y << ", " << modInst->position.z << ")" << std::endl;
 		}
 
 	}
@@ -164,16 +170,23 @@ void PhysicsManager::populateArrayOfRigidBodies(std::vector<reactphysics3d::Rigi
 
 void PhysicsManager::createRigidBodyForModelInstance(ModelInstance::ModelInstance* modelInstance)
 {
-    log("Creating rigid body for model: " + modelInstance->getModelName());
+	log("Creating rigid body for model: " + modelInstance->getModelName());
 	modelInstance->rigidBody = physicsWorldPtr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(modelInstance->position.x, modelInstance->position.y, modelInstance->position.z), reactphysics3d::Quaternion::identity()));
 
-	modelInstance->rigidBody->setType(reactphysics3d::BodyType::DYNAMIC);
-	//modelInstance->rigidBody->enableGravity(true);
+	if (modelInstance->isDynamic)
+	{
+		modelInstance->rigidBody->setType(reactphysics3d::BodyType::DYNAMIC);
+	}
+	else
+	{
+		modelInstance->rigidBody->setType(reactphysics3d::BodyType::STATIC);
+		modelInstance->rigidBody->enableGravity(false);
+	}
 
-    
-    modelInstance->sphereShape = physicsCommonPtr->createSphereShape(modelInstance->colliderSphereRadius); // createSphereCollisionShape(radius);
-	reactphysics3d::Transform colliderTransform = reactphysics3d::Transform::identity(); // No offset for the collider
-    modelInstance->collider = modelInstance->rigidBody->addCollider(modelInstance->sphereShape, colliderTransform);
+
+	modelInstance->sphereShape = physicsCommonPtr->createSphereShape(modelInstance->colliderSphereRadius);
+	reactphysics3d::Transform colliderTransform = reactphysics3d::Transform::identity();
+	modelInstance->collider = modelInstance->rigidBody->addCollider(modelInstance->sphereShape, colliderTransform);
 }
 
 std::vector<reactphysics3d::RigidBody*>& PhysicsManager::getArrayOfRigidBodies()
@@ -189,4 +202,16 @@ std::vector<ModelInstance::ModelInstance*>& PhysicsManager::getArrayOfModelInsta
 void PhysicsManager::addModelInstance(ModelInstance::ModelInstance* modelInstance)
 {
     modelInstances.push_back(modelInstance);
+}
+
+void PhysicsManager::makeFloor(ModelInstance::ModelInstance* modelInstance)
+{
+	modelInstance->boxShape = physicsCommonPtr->createBoxShape(rp3d::Vector3(500, 1, 500));
+	modelInstance->collider = modelInstance->rigidBody->addCollider(modelInstance->boxShape, rp3d::Transform::identity());
+	
+    
+    modelInstance->rigidBody->setType(rp3d::BodyType::STATIC);
+	modelInstance->rigidBody->enableGravity(false);
+
+	modelInstance->rigidBody->setTransform(rp3d::Transform(rp3d::Vector3(modelInstance->position.x, modelInstance->position.y, modelInstance->position.z), rp3d::Quaternion::identity()));
 }

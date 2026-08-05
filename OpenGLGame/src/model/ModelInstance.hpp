@@ -25,15 +25,17 @@ namespace ModelInstance
         Model* model;
         reactphysics3d::RigidBody* rigidBody;
         reactphysics3d::SphereShape* sphereShape;
+		reactphysics3d::BoxShape* boxShape;
         reactphysics3d::Collider* collider;
         rp3d::PhysicsWorld* physicsWorldptr;
         glm::vec3 position;
         glm::vec3 scale;
-        float colliderSphereRadius = 3.0f;
+        float colliderSphereRadius = 1.0f;
+        bool isDynamic = false;
         rp3d::Transform prevRigidBodyTransform = rp3d::Transform::identity();
         //MyRigidBody* rigidBody = nullptr;
-        ModelInstance(const char* modelName, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 scl = glm::vec3(1.0f), rp3d::PhysicsWorld* physicsWorldptr = nullptr)
-            : position(pos), scale(scl), physicsWorldptr(physicsWorldptr)
+        ModelInstance(const char* modelName, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 scl = glm::vec3(1.0f), rp3d::PhysicsWorld* physicsWorldptr = nullptr, bool isDynamic = false)
+            : position(pos), scale(scl), physicsWorldptr(physicsWorldptr), isDynamic(isDynamic)
         {
             ModelFactory modelFactory;
             //model = new Model(path); // path is given from Scene::populateScene()
@@ -49,36 +51,20 @@ namespace ModelInstance
 
                 return;
             }
+            // Set load successful first before trying to set its position. 
             model->loadSuccessful = true;
-
-            // set the models position. 
-            // 
-            // If the model is flagged to have a rigid body then create a rigid body.
-            // 
-            // TODO: Implement a bool flag (hasRigidBody) in the ModelInstance struct, 
-            // this can be used for checking if this model should expect to have a rigid body attached to it.
-            // If the flag is set to true and there is no rigidbody attached, throw a soft error and proceed with rendering as usual. 
-            // 
             model->setPosition(position);
             
-            // create rigidbody at position and add it to the physics world
-			rigidBody = physicsWorldptr->createRigidBody(reactphysics3d::Transform(reactphysics3d::Vector3(position.x, position.y, position.z), reactphysics3d::Quaternion::identity()));
-			rigidBody->setType(reactphysics3d::BodyType::DYNAMIC);
-
-			// Initialize the previous rigid body transform for interpolation
-			prevRigidBodyTransform = rigidBody->getTransform();
-
-			//physicsManager->createRigidBodyForModelInstance(this);
-
-			//rigidBody = new MyRigidBody(rp3d::Vector3(position.x, position.y, position.z), physicsWorldptr, model->getPtrIndex());
+            
         }
 
-        void update() 
-        {
-			// update the models position based on the rigid bodys position in the physics world.
-            reactphysics3d::Vector3 pos = rigidBody->getTransform().getPosition();
-            model->setPosition(glm::vec3(pos.x, pos.y, pos.z));
-        }
+        // I do this update already in physics manager
+   //     void update() 
+   //     {
+			//// update the models position based on the rigid bodys position in the physics world.
+   //         reactphysics3d::Vector3 pos = rigidBody->getTransform().getPosition();
+   //         model->setPosition(glm::vec3(pos.x, pos.y, pos.z));
+   //     }
 
 		std::string getModelName()
 		{

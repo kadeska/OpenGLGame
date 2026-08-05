@@ -127,7 +127,7 @@ void OpenGLGame::GlfwWindow::render()
 
             // draw call
             if (modelInstance->model) {
-                modelInstance->update(); 
+                //modelInstance->update(); 
                 modelInstance->model->Draw(myShader);
             }
 
