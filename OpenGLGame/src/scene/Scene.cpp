@@ -77,12 +77,18 @@ void Scene::populateScene()
 	// 
 	//models.push_back(new ModelInstance::ModelInstance("backpack", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr()));
 	
-	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(0.0f, 4.0f, 0.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(0.0f, 34.0f, 0.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(0.0f, 64.0f, 0.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(1.0f, 10.0f, 1.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(2.0f, 20.0f, 2.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(3.0f, 30.0f, 3.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(4.0f, 40.0f, 4.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(5.0f, 50.0f, 5.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(6.0f, 60.0f, 6.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(7.0f, 70.0f, 7.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(8.0f, 80.0f, 8.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(9.0f, 90.0f, 9.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
 	
 	
-	models.push_back(new ModelInstance::ModelInstance("floor", glm::vec3(0.0f, -15.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr(), false));
+	models.push_back(new ModelInstance::ModelInstance("floor", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr(), false));
 
 	
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(1.0f)));

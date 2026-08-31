@@ -18,6 +18,8 @@ using namespace logger;
 
 //#include <reactphysics3d/reactphysics3d.h>
 
+
+
 OpenGLGame::GlfwWindow m_window;
 
 void endProg()

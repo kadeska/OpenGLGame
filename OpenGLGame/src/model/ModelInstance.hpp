@@ -17,11 +17,13 @@ using namespace logger;
 
 namespace ModelInstance
 {
-	
+    
 
     // ModelInstance structure to hold model data, RigidBody if applicable, and transformation information
     struct ModelInstance
     {
+        ModelFactory modelFactory;
+
         Model* model;
         reactphysics3d::RigidBody* rigidBody;
         reactphysics3d::SphereShape* sphereShape;
@@ -37,7 +39,7 @@ namespace ModelInstance
         ModelInstance(const char* modelName, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 scl = glm::vec3(1.0f), rp3d::PhysicsWorld* physicsWorldptr = nullptr, bool isDynamic = false)
             : position(pos), scale(scl), physicsWorldptr(physicsWorldptr), isDynamic(isDynamic)
         {
-            ModelFactory modelFactory;
+            
             //model = new Model(path); // path is given from Scene::populateScene()
 
 
@@ -85,6 +87,7 @@ namespace ModelInstance
 
     };
 
+    // get the transform of the given model instance
     glm::vec3 getTransform(const ModelInstance modelInstance);
 
 

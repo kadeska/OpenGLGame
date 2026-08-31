@@ -81,12 +81,12 @@ Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
 	folderName = modelFolderName;
 
 	// check if the model name is "floor" if so then make a floor. 
-	//if (modelFolderName == "floor") 
-	//{
-	//	// 
+	if (modelFolderName == "floor") 
+	{
+		
 		makeFloor();
-	//	return modelPtr;
-	//}
+	    return modelPtr;
+	}
 
 
 
@@ -122,6 +122,7 @@ Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
 
 bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderName)
 {
+	// make sure the folder exists
     if (FileManager::checkForModelDataFolder(modelFolderName))
     {
         // if this returns true then we have this models data file already
@@ -288,7 +289,7 @@ void ModelFactory::populateModelData(std::string modelFolderName)
 void ModelFactory::makeFloor()
 {
 	ModelData floorModelData;              // The model data gets copied into the Model class, dont worry about making it a global variable.
-	floorModelData.modelName = "Floor";
+	floorModelData.modelName = "Floor"; // this is redundent, we have a name string in the model class. Lets consolidate all model data into the struct.
 	modelPtr = new Model(floorModelData);
 }
 

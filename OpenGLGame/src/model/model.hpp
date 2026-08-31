@@ -51,7 +51,11 @@ public:
     // constructor, expects a filepath to a 3D model.
     Model(ModelData _modelData)
     {
+        // ToDo: make a typename for what type of model it is for simpler logic.
+        // this line simply checks if this model should be a floor model. 
+        // This could be the start of a type system for models.......
         floor = (modelData.modelName == "floor");
+
 
         if (modelData.meshes.empty()) 
         {

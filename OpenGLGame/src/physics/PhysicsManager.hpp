@@ -7,7 +7,7 @@
 class PhysicsManager
 {
 public:
-	const float gravity = -0.85f;
+	const float gravity = -0.55f;
 	const int velocitySolverNbIterations = 20;
 public:
 	PhysicsManager();

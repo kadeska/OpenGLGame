@@ -206,7 +206,7 @@ void PhysicsManager::addModelInstance(ModelInstance::ModelInstance* modelInstanc
 
 void PhysicsManager::makeFloor(ModelInstance::ModelInstance* modelInstance)
 {
-	modelInstance->boxShape = physicsCommonPtr->createBoxShape(rp3d::Vector3(500, 1, 500));
+	modelInstance->boxShape = physicsCommonPtr->createBoxShape(rp3d::Vector3(100, 100, 100));
 	modelInstance->collider = modelInstance->rigidBody->addCollider(modelInstance->boxShape, rp3d::Transform::identity());
 	
     
