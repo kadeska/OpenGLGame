@@ -21,6 +21,9 @@ public:
 	rp3d::RigidBody* rigidBody;
 	ModelInstance::ModelInstance* modelInstance;
 
+	// the pointer to the physics common object
+	rp3d::PhysicsCommon* physicsCommon;
+
 	// The collision shape
 	rp3d::CollisionShape* collisionShape;
 
@@ -28,7 +31,7 @@ public:
 	//void updateTransform();
 
 
-	void init(GameObjectType type);
+	void init(rp3d::PhysicsCommon* _physicsCommon, GameObjectType type);
 
 	void setCollisionShape(rp3d::CollisionShape* shape);
 

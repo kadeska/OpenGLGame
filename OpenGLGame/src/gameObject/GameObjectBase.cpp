@@ -1,9 +1,10 @@
 #include "GameObjectBase.hpp"
 
 
-void GameObjectBase::init(GameObjectType type)
+void GameObjectBase::init(rp3d::PhysicsCommon* _physicsCommon, GameObjectType type)
 {
-	gameObjectType = type;
+	this->physicsCommon = _physicsCommon;
+	this->gameObjectType = type;
 }
 
 void GameObjectBase::setCollisionShape(rp3d::CollisionShape* shape)

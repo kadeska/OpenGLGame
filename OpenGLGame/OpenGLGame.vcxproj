@@ -148,6 +148,7 @@
     <ClCompile Include="src\gameObject\Ground.cpp" />
     <ClCompile Include="OpenGLGame_main.cpp" />
     <ClCompile Include="src\gameObject\GameObjectBase.cpp" />
+    <ClCompile Include="src\gameObject\Player.cpp" />
     <ClCompile Include="src\physics\PhysicsManager.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\glfw\glfwWindow.cpp" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="src\gameObject\Ground.hpp" />
     <ClInclude Include="src\gameObject\GameObjectBase.hpp" />
+    <ClInclude Include="src\gameObject\Player.hpp" />
     <ClInclude Include="src\physics\PhysicsManager.hpp" />
     <ClInclude Include="src\camera\camera.hpp" />
     <ClInclude Include="src\glfw\glfwIncludes.hpp" />
