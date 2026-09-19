@@ -45,10 +45,13 @@
     <ClCompile Include="src\scene\SceneManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gameObject\GameObjectBase.cpp">
+    <ClCompile Include="src\rendering\DebugRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\gameObject\Ground.cpp">
+    <ClCompile Include="src\rendering\RegularRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rendering\RenderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,10 +98,13 @@
     <ClInclude Include="src\scene\SceneManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gameObject\GameObjectBase.hpp">
+    <ClInclude Include="src\rendering\DebugRenderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\gameObject\Ground.hpp">
+    <ClInclude Include="src\rendering\RegularRenderer.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rendering\RenderManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

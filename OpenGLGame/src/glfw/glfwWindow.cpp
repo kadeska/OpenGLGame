@@ -101,6 +101,9 @@ void OpenGLGame::GlfwWindow::render()
         }
         myShader->use();
 
+        //---------------------------------------------------------------------------------------------------------------------------------------------
+        // move this block to a renderer class. ?
+
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera->GetViewMatrix();
@@ -132,11 +135,12 @@ void OpenGLGame::GlfwWindow::render()
             }
 
         }
+        //-------------------------------------------------------------------------------------------------------------------------------------------------
     }
     else 
     {
 		//std::cout << "[!Warning!] | GlfwWindow::render() | Scene is nullptr, cannot render!" << std::endl;
-        log("Scene is nullptr, cannot render!", LogType::ERROR);
+        log("Scene is nullptr or cannot render!", LogType::ERROR);
         shouldRender = false;
         return;
     }
@@ -147,6 +151,10 @@ void OpenGLGame::GlfwWindow::render()
 OpenGLGame::GlfwWindow::GlfwWindow()
 {
     // timing helpers for fixed timestep loop
+
+    // ToDO:
+    // maybe only start the frame timer when the renderer is ready to display. 
+
     previousFrameTime = getCurrentSystemTime();
     accumulator = 0.0L;
 
@@ -237,64 +245,64 @@ bool OpenGLGame::GlfwWindow::createScene()
 
 
 
-
-void OpenGLGame::GlfwWindow::startRender()
-{
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering.
-
-    while (!glfwWindowShouldClose(window))
-    {
-        // Constant physics time step
-        const float timestep = 1.0f / 60.0f;
-
-        // Get the current system time
-        long double currentFrameTime = getCurrentSystemTime();
-
-        // Compute the time difference between the two frames
-        long double frameDeltaTime = currentFrameTime - previousFrameTime;
-        previousFrameTime = currentFrameTime;
-
-        // Add the time difference in the accumulator
-        accumulator += frameDeltaTime;
-
-        // Step the physics simulation for all fixed timesteps
-        while (accumulator >= timestep)
-        {
-            // Perform the physics simulation step (no interpolation during stepping)
-            scene->updatePhysicsWorld(timestep, 1.0f);
-
-            accumulator -= timestep;
-        }
-
-        // Calculate the interpolation factor for rendering
-        // This represents how far into the next physics timestep we are
-        // factor = 0.0 means we're at the previous physics frame
-        // factor = 1.0 means we're at the current physics frame (shouldn't reach exactly 1.0)
-        float renderFactor = accumulator / timestep;
-        
-
-        
-
-        // Now you can render your body using the new transform
-
-        
-
-        // update deltaTime used for camera movement/input
-        deltaTime = static_cast<float>(frameDeltaTime);
-
-        // input
-        processInput(window);
-
-        // render the frame (render() will perform its own scene update if present)
-        if (shouldRender)
-        {
-            render();
-            glfwSwapBuffers(window);
-        }
-
-        glfwPollEvents();
-    }
-}
+// This function contains the main render loop.
+//void OpenGLGame::GlfwWindow::startRender()
+//{
+//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // put this here so the mouse is only captured when we want to actually start rendering.
+//
+//    while (!glfwWindowShouldClose(window))
+//    {
+//        // Constant physics time step
+//        const float timestep = 1.0f / 60.0f;
+//
+//        // Get the current system time
+//        long double currentFrameTime = getCurrentSystemTime();
+//
+//        // Compute the time difference between the two frames
+//        long double frameDeltaTime = currentFrameTime - previousFrameTime;
+//        previousFrameTime = currentFrameTime;
+//
+//        // Add the time difference in the accumulator
+//        accumulator += frameDeltaTime;
+//
+//        // Step the physics simulation for all fixed timesteps
+//        while (accumulator >= timestep)
+//        {
+//            // Perform the physics simulation step (no interpolation during stepping)
+//            scene->updatePhysicsWorld(timestep, 1.0f);
+//
+//            accumulator -= timestep;
+//        }
+//
+//        // Calculate the interpolation factor for rendering
+//        // This represents how far into the next physics timestep we are
+//        // factor = 0.0 means we're at the previous physics frame
+//        // factor = 1.0 means we're at the current physics frame (shouldn't reach exactly 1.0)
+//        float renderFactor = accumulator / timestep;
+//        
+//
+//        
+//
+//        // Now you can render your body using the new transform
+//
+//        
+//
+//        // update deltaTime used for camera movement/input
+//        deltaTime = static_cast<float>(frameDeltaTime);
+//
+//        // input
+//        processInput(window);
+//
+//        // render the frame (render() will perform its own scene update if present)
+//        if (shouldRender)
+//        {
+//            render();
+//            glfwSwapBuffers(window);
+//        }
+//
+//        glfwPollEvents();
+//    }
+//}
 
 void OpenGLGame::GlfwWindow::destroy()
 {

@@ -145,24 +145,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\gameObject\Ground.cpp" />
     <ClCompile Include="OpenGLGame_main.cpp" />
-    <ClCompile Include="src\gameObject\GameObjectBase.cpp" />
-    <ClCompile Include="src\gameObject\Player.cpp" />
     <ClCompile Include="src\physics\PhysicsManager.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\glfw\glfwWindow.cpp" />
     <ClCompile Include="src\model\MeshData.hpp" />
     <ClCompile Include="src\model\ModelFactory.cpp" />
+    <ClCompile Include="src\rendering\RegularRenderer.cpp" />
+    <ClCompile Include="src\rendering\RenderManager.cpp" />
     <ClCompile Include="src\scene\Scene.cpp" />
     <ClCompile Include="src\scene\SceneManager.cpp" />
     <ClCompile Include="src\stb_image_impl.cpp" />
+    <ClCompile Include="src\rendering\DebugRenderer.cpp" />
     <ClCompile Include="src\utils\FileManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\gameObject\Ground.hpp" />
-    <ClInclude Include="src\gameObject\GameObjectBase.hpp" />
-    <ClInclude Include="src\gameObject\Player.hpp" />
     <ClInclude Include="src\physics\PhysicsManager.hpp" />
     <ClInclude Include="src\camera\camera.hpp" />
     <ClInclude Include="src\glfw\glfwIncludes.hpp" />
@@ -171,10 +168,13 @@
     <ClInclude Include="src\model\model.hpp" />
     <ClInclude Include="src\model\ModelFactory.hpp" />
     <ClInclude Include="src\model\ModelInstance.hpp" />
+    <ClInclude Include="src\rendering\RegularRenderer.hpp" />
+    <ClInclude Include="src\rendering\RenderManager.hpp" />
     <ClInclude Include="src\scene\Scene.hpp" />
     <ClInclude Include="src\scene\SceneManager.hpp" />
     <ClInclude Include="src\shader.hpp" />
     <ClInclude Include="src\stbimage\stbimp.h" />
+    <ClInclude Include="src\rendering\DebugRenderer.hpp" />
     <ClInclude Include="src\utils\FileManager.hpp" />
     <ClInclude Include="src\utils\Logger.hpp" />
   </ItemGroup>

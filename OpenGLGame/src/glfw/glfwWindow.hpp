@@ -40,12 +40,15 @@ namespace OpenGLGame
 		GlfwWindow();
 		~GlfwWindow() = default;
 		
+		// this function calls the render functions for all the models
+		void render();
+
 		// creates a GLFW window and its OpenGL context, and sets up all the required OpenGL function pointers.
 		// Also creates the scene(s) and the shader program. Returns true if the window was created successfully, false otherwise.
 		bool create(const char* title, int width, int height);
 		bool createScene();
 		// this function contains the main render loop.
-		void startRender();
+		//void startRender();
 		void destroy();
 		// returns the current GLFWwindow pointer, which can be used for input processing and other GLFW functions that require the window pointer.
 		GLFWwindow* get() const { return window; }
@@ -57,8 +60,7 @@ namespace OpenGLGame
 		bool initGlad();
 		bool initGLFW();
 		bool makeShaderProgram();
-		// this function calls the render functions for all the models
-		void render();
+		
 		
 	};
 }

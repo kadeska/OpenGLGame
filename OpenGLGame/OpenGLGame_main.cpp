@@ -10,8 +10,9 @@
 #include <iostream>
 
 
-
+#include "src/rendering/DebugRenderer.hpp"
 #include "src/glfw/glfwWindow.hpp"
+#include "src/rendering/RenderManager.hpp"
 
 #include "src/utils/Logger.hpp"
 using namespace logger;
@@ -20,11 +21,13 @@ using namespace logger;
 
 
 
-OpenGLGame::GlfwWindow m_window;
+OpenGLGame::GlfwWindow* m_window = nullptr;
+RenderManager* renderManager = nullptr;
+bool debugRender = false;
 
 void endProg()
 {
-    m_window.destroy();
+    m_window->destroy();
     glfwTerminate();
     std::cout << "[END] Press Enter key to exit...\n" << std::cin.get();
 }
@@ -32,28 +35,63 @@ void endProg()
 // entry point
 int main()
 {
+    // DRAFT::
+    // 
+    // atexit();
+    // log();
+    // window.create();
+    // //regualrRenderer.create(window);
+    // //debugRenderer.create(window); // if debugRender is true.
+	// renderManager.create(window); // this will create the render manager, which will manage the regular and debug renderers, and it contains a render call that will use the appropriate renderer.
+    // 
+    // While shouldRender renderManager.render();
+    // 
+
+
+
+
+
     std::atexit(endProg);
-
-
-    //std::cout << "Hello World!\n" << std::endl;
     log("Starting OpenGL Game...");
-    // example usage of my own template print function
-    // print(2);
-    
     // create a window and openGL context
-    if (!m_window.create("Testing OpenGL", OpenGLGame::SCR_WIDTH, OpenGLGame::SCR_HEIGHT)) 
+    m_window = new OpenGLGame::GlfwWindow();
+    m_window->create("Testing OpenGL", OpenGLGame::SCR_WIDTH, OpenGLGame::SCR_HEIGHT);
+
+    if (!m_window) 
     {
-		//std::cout << "Failed to create window" << std::endl;
         log("Failed to create GLFW window. ");
         return 1;
     }
+
+	//renderManager = new RenderManager(m_window);
+	//renderManager->create(m_window);
+
+	renderManager = new RenderManager(m_window);
+	renderManager->setDebugRender(debugRender);
+	renderManager->render();
+
+
 
     // build a scene.
 	// what is a scene? a scene is a collection of models, lights, and other objects that make up the game world.
     //m_window.createScene();
     
-    // start the main loop
-    m_window.startRender();
+
+    // check if debuf rendering is on.
+   // if (debugRender) 
+   // {
+   //     if (debugRenderer == nullptr) 
+   //     {
+			//debugRenderer = new DebugRenderer();
+			//log("DebugRenderer created.");
+   //     }
+   //     // do rendering here
+   //     //return 0;
+   // }
+
+   // // start the main loop
+   // m_window->startRender();
+    // I feel like i should change this to be the renderer of choice is called here and the window is passed to the renderer. 
 
     return 0;
 }
