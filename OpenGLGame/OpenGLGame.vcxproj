@@ -146,6 +146,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="OpenGLGame_main.cpp" />
+    <ClCompile Include="src\game\GameManager.cpp" />
     <ClCompile Include="src\physics\PhysicsManager.cpp" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\glfw\glfwWindow.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="src\utils\FileManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\GameManager.hpp" />
     <ClInclude Include="src\physics\PhysicsManager.hpp" />
     <ClInclude Include="src\camera\camera.hpp" />
     <ClInclude Include="src\glfw\glfwIncludes.hpp" />

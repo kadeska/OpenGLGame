@@ -12,7 +12,8 @@
 
 #include "src/rendering/DebugRenderer.hpp"
 #include "src/glfw/glfwWindow.hpp"
-#include "src/rendering/RenderManager.hpp"
+//#include "src/rendering/RenderManager.hpp"
+#include "src/game/GameManager.hpp"
 
 #include "src/utils/Logger.hpp"
 using namespace logger;
@@ -22,7 +23,9 @@ using namespace logger;
 
 
 OpenGLGame::GlfwWindow* m_window = nullptr;
-RenderManager* renderManager = nullptr;
+//RenderManager* renderManager = nullptr;
+GameManager* gameManager = nullptr;
+
 bool debugRender = false;
 
 void endProg()
@@ -63,12 +66,24 @@ int main()
         return 1;
     }
 
+    gameManager = new GameManager();
+
+    gameManager->init(m_window);
+    gameManager->update();
+    
+
+    // ToDO: I need to fix the physiscs update. 
+
+
+
 	//renderManager = new RenderManager(m_window);
 	//renderManager->create(m_window);
 
-	renderManager = new RenderManager(m_window);
-	renderManager->setDebugRender(debugRender);
-	renderManager->render();
+	//renderManager = new RenderManager(m_window);
+	//renderManager->setDebugRender(debugRender);
+	//renderManager->render();
+
+	
 
 
 

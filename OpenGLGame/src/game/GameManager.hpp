@@ -2,6 +2,7 @@
 //#include "../physics/PhysicsManager.hpp"
 #include "../rendering/RenderManager.hpp"
 #include "../scene/SceneManager.hpp"
+#include "../glfw/glfwWindow.hpp"
 
 
 class GameManager
@@ -14,7 +15,7 @@ public:
 	GameManager();
 	~GameManager();
 
-	void init();
+	void init(OpenGLGame::GlfwWindow* _window);
 	void update();
 	void render();
 };

@@ -16,6 +16,7 @@ RegularRenderer::RegularRenderer(OpenGLGame::GlfwWindow* window)
 
 }
 
+// update physics sim and render the scene.
 void RegularRenderer::render(OpenGLGame::GlfwWindow* window)
 {
     // move this back into the window class
