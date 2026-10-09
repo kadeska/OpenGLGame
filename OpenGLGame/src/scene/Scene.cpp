@@ -77,7 +77,7 @@ void Scene::populateScene()
 	// 
 	//models.push_back(new ModelInstance::ModelInstance("backpack", glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr()));
 	
-	models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(1.0f, 10.0f, 1.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
+	models.push_back(new ModelInstance::ModelInstance("cat", rp3d::Vector3(1.0f, 10.0f, 1.0f), glm::vec3(0.05f), /*physicsManager->getPhysicsWorldPtr(),*/ true));
 	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(2.0f, 20.0f, 2.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
 	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(3.0f, 30.0f, 3.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
 	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(4.0f, 40.0f, 4.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
@@ -88,7 +88,7 @@ void Scene::populateScene()
 	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(9.0f, 90.0f, 9.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
 	
 	
-	models.push_back(new ModelInstance::ModelInstance("floor", glm::vec3(100.0f, 1.0f, 100.0f), glm::vec3(1.0f), physicsManager->getPhysicsWorldPtr(), false));
+	models.push_back(new ModelInstance::ModelInstance("floor", rp3d::Vector3(100.0f, 1.0f, 100.0f), glm::vec3(1.0f), /*physicsManager->getPhysicsWorldPtr(),*/ false));
 
 	
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
@@ -108,20 +108,20 @@ void Scene::populateScene()
 
 	// after the models are loaded create the rigid bodies for each model.
 
-	for (int i = 0; i < models.size(); i++)
-	{
-		ModelInstance::ModelInstance* modelInstance = models[i];
-		if (modelInstance != nullptr)
-		{
-			physicsManager->createRigidBodyForModelInstance(modelInstance);
-			physicsManager->addModelInstance(modelInstance);
+	//for (int i = 0; i < models.size(); i++)
+	//{
+	//	ModelInstance::ModelInstance* modelInstance = models[i];
+	//	if (modelInstance != nullptr)
+	//	{
+	//		physicsManager->createRigidBodyForModelInstance(modelInstance);
+	//		physicsManager->addModelInstance(modelInstance);
 
-			if (modelInstance->getModelName() == "floor") 
-			{
-				physicsManager->makeFloor(modelInstance);
-			}
-		}
-	}
+	//		if (modelInstance->getModelName() == "floor") 
+	//		{
+	//			physicsManager->makeFloor(modelInstance);
+	//		}
+	//	}
+	//}
 
 	log("Done populating scene.");
 
@@ -129,7 +129,7 @@ void Scene::populateScene()
 
 // physics sim 
 
-void Scene::updatePhysicsWorld(const double timestep, const float factor)
+void Scene::updatePhysicsWorld(const double timestep, rp3d::PhysicsWorld* world)
 {
 	if (physicsManager == nullptr) 
 	{
@@ -138,28 +138,19 @@ void Scene::updatePhysicsWorld(const double timestep, const float factor)
 		return;
 	}
 
-	physicsManager->updatePhysicsWorld(timestep, factor);
+	physicsManager->updatePhysicsWorld(timestep, world);
+}
 
-	
+void Scene::updateModelsFromPhysicsWorld(rp3d::PhysicsWorld* world, float factor)
+{
+	for (ModelInstance::ModelInstance* modelInstance : models) 
+	{
+		int index = modelInstance->model->getPtrIndex();
+		rp3d::Transform prevTtransform = modelInstance->prevRigidBodyTransform;
+		rp3d::Transform currTransform = world->getRigidBody(index)->getTransform();
 
+		rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevTtransform, currTransform, factor);
 
-	//physicsManager->getPhysicsWorldPtr()->update(timestep);
-	//physicsManager->updatePhysicsWorld(timestep, factor);
-
-	//for (int i = 0; i < models.size(); i++)
-	//{
-	//	ModelInstance::ModelInstance* modelInstance = models[i];
-	//	if ((modelInstance != nullptr) && (modelInstance->model != NULL) && (modelInstance->rigidBody != nullptr))
-	//	{
-	//		//rp3d::Transform transform = modelInstance->rigidBody->getTransform();
-	//		//rp3d::Vector3 position = transform.getPosition();
-	//		//modelInstance->position = glm::vec3(position.x, position.y, position.z);
-	//		// Get the updated position of the body
-	//        const reactphysics3d::Transform& transform = modelInstance->rigidBody->getTransform();
-	//        const reactphysics3d::Vector3& position = transform.getPosition();
-	//		modelInstance->model->setPosition(glm::vec3(position.x, position.y, position.z));
-	//	}
-	//}
-
-	//physicsManager->populateArrayOfRigidBodies(physicsManager->getArrayOfRigidBodies());
+		modelInstance->position = world->getRigidBody(index)->getTransform().getPosition();
+	}
 }

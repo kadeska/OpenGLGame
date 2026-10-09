@@ -123,7 +123,8 @@ void OpenGLGame::GlfwWindow::render()
         for (ModelInstance::ModelInstance* modelInstance : scene->getModels())
         {
             glm::mat4 model = glm::mat4(1.0f);
-            model = glm::translate(model, modelInstance->position);
+			glm::vec3 pos = glm::vec3(modelInstance->position.x, modelInstance->position.y, modelInstance->position.z);
+            model = glm::translate(model, pos);
             model = glm::scale(model, modelInstance->scale);
             //model = glm::translate(model, modelInstance->position) = glm::scale(model, modelInstance->scale);
             myShader->setMat4("model", model);
@@ -146,6 +147,12 @@ void OpenGLGame::GlfwWindow::render()
     }
 
     
+}
+
+void OpenGLGame::GlfwWindow::renderBlank()
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 OpenGLGame::GlfwWindow::GlfwWindow()

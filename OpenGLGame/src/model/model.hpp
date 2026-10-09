@@ -9,6 +9,8 @@
 
 #include "mesh/mesh.hpp"
 
+#include <reactphysics3d/mathematics/Vector3.h>
+
 #include "../utils/Logger.hpp"
 using namespace logger;
 
@@ -42,7 +44,7 @@ public:
 	std::string modelName; // the model name (filename without extension)
     bool gammaCorrection = false;
 
-	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+    rp3d::Vector3 position;
 
 	//bool loadSuccessful;
 
@@ -54,10 +56,15 @@ public:
         // ToDo: make a typename for what type of model it is for simpler logic.
         // this line simply checks if this model should be a floor model. 
         // This could be the start of a type system for models.......
-        floor = (modelData.modelName == "floor");
+        //if (modelData.) {}
+
+		modelData = _modelData;
 
 
-        if (modelData.meshes.empty()) 
+        floor = (_modelData.modelName == "floor");
+
+
+        if (_modelData.meshes.empty()) 
         {
             //std::cout << "ERROR::MODEL:: No meshes provided in model data." << std::endl;
             log("No meshes provided in model data.", LogType::ERROR);
@@ -103,7 +110,7 @@ public:
         return ptrIndex;
 	}
 
-	void setPosition(glm::vec3 pos)
+	void setPosition(rp3d::Vector3 pos)
 	{
         if (loadSuccessful) 
         {

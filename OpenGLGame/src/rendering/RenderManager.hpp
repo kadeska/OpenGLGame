@@ -6,6 +6,8 @@
 
 class RenderManager
 {
+private:
+	OpenGLGame::GlfwWindow* window = nullptr;
 public:
 	bool debugRender = false;
 
@@ -15,7 +17,7 @@ public:
 
 
 	RenderManager(OpenGLGame::GlfwWindow* window);
-	void render();
+	void render(Scene* _scene, float _timestep, float _factor);
 	void setDebugRender(bool value);
 };
 

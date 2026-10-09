@@ -69,7 +69,7 @@ int main()
     gameManager = new GameManager();
 
     gameManager->init(m_window);
-    gameManager->update();
+    gameManager->startGame();
     
 
     // ToDO: I need to fix the physiscs update. 

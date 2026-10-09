@@ -29,15 +29,15 @@ namespace ModelInstance
         reactphysics3d::SphereShape* sphereShape;
 		reactphysics3d::BoxShape* boxShape;
         reactphysics3d::Collider* collider;
-        rp3d::PhysicsWorld* physicsWorldptr;
-        glm::vec3 position;
+        //rp3d::PhysicsWorld* physicsWorldptr;
+        rp3d::Vector3 position;
         glm::vec3 scale;
         float colliderSphereRadius = 1.0f;
         bool isDynamic = false;
         rp3d::Transform prevRigidBodyTransform = rp3d::Transform::identity();
         //MyRigidBody* rigidBody = nullptr;
-        ModelInstance(const char* modelName, glm::vec3 pos = glm::vec3(0.0f), glm::vec3 scl = glm::vec3(1.0f), rp3d::PhysicsWorld* physicsWorldptr = nullptr, bool isDynamic = false)
-            : position(pos), scale(scl), physicsWorldptr(physicsWorldptr), isDynamic(isDynamic)
+        ModelInstance(const char* modelName, rp3d::Vector3 pos, glm::vec3 scl = glm::vec3(1.0f), /*rp3d::PhysicsWorld* physicsWorldptr = nullptr,*/ bool isDynamic = false)
+            : position(pos), scale(scl), /*physicsWorldptr(physicsWorldptr),*/ isDynamic(isDynamic)
         {
             
             //model = new Model(path); // path is given from Scene::populateScene()
@@ -115,6 +115,6 @@ namespace ModelInstance
 }
 
 
-inline glm::vec3 ModelInstance::getTransform(const ModelInstance modelInstance) {
-    return modelInstance.position;
-}   
+//inline rp3d::Vector3 ModelInstance::getTransform(const ModelInstance modelInstance) {
+//    return modelInstance.position;
+//}   

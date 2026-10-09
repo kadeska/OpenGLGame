@@ -1,15 +1,16 @@
 #include "RenderManager.hpp"
 
-OpenGLGame::GlfwWindow* window = nullptr;
+
 
 RenderManager::RenderManager(OpenGLGame::GlfwWindow* _window)
 {
-	regularRenderer = new RegularRenderer(_window);
+	regularRenderer = new RegularRenderer(_window, nullptr);
 	debugRenderer = new DebugRenderer(_window);
 	window = _window;
 }
 
-void RenderManager::render()
+// starts the render loop. 
+void RenderManager::render(Scene* _scene, float _timestep, float _factor)
 {
 	if (debugRender)
 	{
@@ -17,7 +18,7 @@ void RenderManager::render()
 	}
 	else
 	{
-		regularRenderer->render(window);
+		regularRenderer->render(window, _scene, _timestep, _factor);
 	}
 }
 

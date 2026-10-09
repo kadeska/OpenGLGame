@@ -43,6 +43,8 @@ namespace OpenGLGame
 		// this function calls the render functions for all the models
 		void render();
 
+		void renderBlank();
+
 		// creates a GLFW window and its OpenGL context, and sets up all the required OpenGL function pointers.
 		// Also creates the scene(s) and the shader program. Returns true if the window was created successfully, false otherwise.
 		bool create(const char* title, int width, int height);
