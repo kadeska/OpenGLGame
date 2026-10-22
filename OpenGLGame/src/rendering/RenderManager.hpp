@@ -3,6 +3,8 @@
 #include "RegularRenderer.hpp"
 #include "DebugRenderer.hpp"
 
+#include "../scene/SceneManager.hpp"
+
 
 class RenderManager
 {

@@ -3,18 +3,21 @@
 
 
 #include "model.hpp"
-#include "../utils/FileManager.hpp"
+//#include "../utils/FileManager.hpp"
 #include "modelfactory.hpp"
 
 //#include "../physics/RigidBody.hpp"
 //#include <reactphysics3d/engine/PhysicsWorld.h>
 
-#include <reactphysics3d/reactphysics3d.h>       
+//#include <reactphysics3d/reactphysics3d.h>       
 
 #include "../utils/Logger.hpp"
 using namespace logger;
 
+static ModelFactory factory;
 
+
+// Note: Clean this up. 
 namespace ModelInstance
 {
     
@@ -22,9 +25,11 @@ namespace ModelInstance
     // ModelInstance structure to hold model data, RigidBody if applicable, and transformation information
     struct ModelInstance
     {
-        ModelFactory modelFactory;
+        //ModelFactory modelFactory; // this needs to be moved outside the instance.
 
+		// This model pointer is for this specific instance of a model, and is created by the model factory.
         Model* model;
+
         reactphysics3d::RigidBody* rigidBody;
         reactphysics3d::SphereShape* sphereShape;
 		reactphysics3d::BoxShape* boxShape;
@@ -36,6 +41,8 @@ namespace ModelInstance
         bool isDynamic = false;
         rp3d::Transform prevRigidBodyTransform = rp3d::Transform::identity();
         //MyRigidBody* rigidBody = nullptr;
+
+        // Make sure to add the model instance to an array for indexing. 
         ModelInstance(const char* modelName, rp3d::Vector3 pos, glm::vec3 scl = glm::vec3(1.0f), /*rp3d::PhysicsWorld* physicsWorldptr = nullptr,*/ bool isDynamic = false)
             : position(pos), scale(scl), /*physicsWorldptr(physicsWorldptr),*/ isDynamic(isDynamic)
         {
@@ -44,7 +51,8 @@ namespace ModelInstance
 
 
 			// create a model object using our model factory, and set its position to the given position
-			model = modelFactory.createModel(modelName);
+			model = factory.createModel(modelName);
+            
             
             // check if the model was created succesfully.
             if (!model) {

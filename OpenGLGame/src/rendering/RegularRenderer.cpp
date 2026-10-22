@@ -32,7 +32,7 @@ void RegularRenderer::render(OpenGLGame::GlfwWindow* window, Scene* _scene, floa
     // render the frame (render() will perform its own scene update if present)
     if (shouldRender && _scene != nullptr)
     {
-        scene->updatePhysicsWorld(_timestep, _factor);
+        //scene->updatePhysicsWorld(_timestep); // do not call physics update here in the renderer.
         window->render();
         //render();
         glfwSwapBuffers(window->get());

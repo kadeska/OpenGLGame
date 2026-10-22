@@ -1,10 +1,11 @@
 #pragma once
 #include <reactphysics3d/reactphysics3d.h>
-#include "../model/ModelInstance.hpp"
+#include <reactphysics3d/engine/PhysicsWorld.h>
+//#include "../model/ModelInstance.hpp"
 
-#include "../scene/Scene.hpp"
+//#include "../scene/Scene.hpp"
 
-#include  "../utils/Logger.hpp"
+//#include  "../utils/Logger.hpp"
 
 // PhysicsManager class is responsible for all things physics. 
 // This class is the main interface for my games physics system.

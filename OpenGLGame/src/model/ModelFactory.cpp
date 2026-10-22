@@ -19,6 +19,7 @@ using namespace logger;
 
 bool testing = false;
 
+int ptrIndex = 0;
 
 // the model pointer
 Model* modelPtr = nullptr;
@@ -74,6 +75,8 @@ bool ModelFactory::removeLoadedModelByIndex(int index)
     return true;
 }
 
+// -----------------------------------------
+// Main function to create a model object. Will return a model pointer. Warning: Pointer may be nullptr if loading was unsuccesfull. 
 Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
 {
     //FileManager::saveDataToFileAtPath("testing",  + "appData/modelData/" + modelFolderName + "/", "test data");
@@ -120,6 +123,9 @@ Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
 	return nullptr;
 }
 
+
+// -----------------------------------------
+// Construct a model object ptr and assign it to the modelPtr variable.
 bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderName)
 {
 	// make sure the folder exists
@@ -132,9 +138,13 @@ bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderNam
 
         // load the model data from the file and construct the model data in memory
         
+		// populate the modelData object with the data from the model data folder
         populateModelData(modelFolderName);
 
+		// construct the model object using the modelData object that was just populated from the populateModelData(...) function.
         modelPtr = new Model(modelData);
+		//modelPtr->loadSuccessful = true; // dont need this anymore, I set the bool after the models constructor finishes loading the data. 
+		modelPtr->setPtrIndex(ptrIndex++);
 
         return true; // successfully loaded model data from data file
     }
@@ -146,12 +156,14 @@ bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderNam
 //    return false;
 //}
 
+// populates the modelData object with the data from the model data folder of the given model folder name.
+// The modelData object is then later used to construct the model object.
 void ModelFactory::populateModelData(std::string modelFolderName)
 {
     // the mesh data from the loaded folder
     std::vector<MeshData::MeshData> meshData = parseModelDataFolder(modelFolderName);
 
-    Mesh mesh;
+    //Mesh mesh;
 
     modelData.modelName = modelFolderName;
 
@@ -388,6 +400,9 @@ unsigned int ModelFactory::TextureFromFile(const char* path, const std::string& 
     return textureID;
 }
 
+
+// -----------------------------------------
+// parseModelDataFolder: builds a std::vector of MeshData objects from the model data files in the given folder. Each file represents one mesh (MeshData).
 std::vector<MeshData::MeshData> ModelFactory::parseModelDataFolder(std::string folderName)
 {
 	//std::cout << "Parsing model data in folder: " << folderName << std::endl;

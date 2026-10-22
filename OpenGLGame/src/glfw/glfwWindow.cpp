@@ -231,7 +231,7 @@ bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
     // TODO: move this outside to a scene manager class.
     // 
     //create a scene
-    createScene();
+    //createScene();
 
     // add a check here if the scene is null then we can send a debug message
     if (scene == nullptr)
@@ -243,12 +243,12 @@ bool OpenGLGame::GlfwWindow::create(const char* title, int width, int height)
 	return true;
 }
 
-bool OpenGLGame::GlfwWindow::createScene()
-{
-	scene = new Scene();
-
-    return true;
-}
+//bool OpenGLGame::GlfwWindow::createScene()
+//{
+//	scene = new Scene(nullptr);
+//
+//    return true;
+//}
 
 
 

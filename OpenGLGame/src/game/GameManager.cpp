@@ -12,7 +12,7 @@ static long double getCurrentSystemTime();
 OpenGLGame::GlfwWindow* window = nullptr;
 bool sceneReady;
 
-void GameManager::timeStepPhysics(Scene* _scene,float timestep, float _factor)
+void GameManager::timeStepPhysics(Scene* activeScene,float timestep, float _factor)
 {
     factor = _factor;
 
@@ -21,10 +21,12 @@ void GameManager::timeStepPhysics(Scene* _scene,float timestep, float _factor)
 
     // Get the current system time
     long double currentFrameTime = getCurrentSystemTime();
+    previousFrameTime = currentFrameTime;
+	accumulator = 0.0L;
 
     // Compute the time difference between the two frames
     long double frameDeltaTime = currentFrameTime - previousFrameTime;
-    previousFrameTime = currentFrameTime;
+    
 
     // Add the time difference in the accumulator
     accumulator += frameDeltaTime;
@@ -32,23 +34,21 @@ void GameManager::timeStepPhysics(Scene* _scene,float timestep, float _factor)
     // Step the physics simulation for all fixed timesteps
     while (accumulator >= timestep)
     {
-        if (sceneManager->getActiveScene() && (sceneManager->getActiveScene()->getIsGameScene()))
+        //Scene* activeScene = sceneManager->getActiveScene();
+        if (!activeScene && !activeScene->getIsGameScene())
         {
-            // Perform the physics simulation step (no interpolation during stepping)
-            //sceneManager->getActiveScene()->updatePhysicsWorld(timestep, sceneManager->getActiveScene()->getPhysicsWorld());
-
-            _scene->updatePhysicsWorld(timestep, _scene->getPhysicsWorld());
-            
-
-            accumulator -= timestep;
+            //log("No active scene or not a game scene.", LogType::ERROR);
+            break;
         }
         else
         {
-            //log("No active scene or not a game scene.", LogType::ERROR);
+            // Perform the physics simulation step (no interpolation during stepping)
+            //sceneManager->getActiveScene()->updatePhysicsWorld(timestep, sceneManager->getActiveScene()->getPhysicsWorld());
+            // pass in the physics manager to the updatePhysicsWorld function so we can use the physics manager update function for the scene's physics world.
+            activeScene->updatePhysicsWorld(timestep, physicsManager);
 
+            accumulator -= timestep;
         }
-
-
     }
 
     // Calculate the interpolation factor for rendering
@@ -58,7 +58,7 @@ void GameManager::timeStepPhysics(Scene* _scene,float timestep, float _factor)
     factor = accumulator / timestep;
 
     // Now you can render your body using the new transform
-    _scene->updateModelsFromPhysicsWorld(_scene->getPhysicsWorld(), factor);
+    activeScene->updateModelsFromPhysicsWorld(activeScene->getPhysicsWorld(), factor);
 
     // update deltaTime used for camera movement/input
     deltaTime = static_cast<float>(frameDeltaTime);
@@ -72,17 +72,15 @@ GameManager::~GameManager()
 {
 }
 
+// Bind the window to the renderer, initialize the physics and scene managers.
 void GameManager::init(OpenGLGame::GlfwWindow* _window)
 {
 	window = _window;
     // I dont want to have a global physics manager to allow each scene to have their own physics world.
 	//physicsManager = new PhysicsManager();
 	renderManager = new RenderManager(_window);
-	sceneManager = new SceneManager();
-	//activeScene = sceneManager->createDefaultScene();
-    // 
-    // I actually dont need to call this here as I already set the sctive scene when I initialize the scenes in the startGame() funtion.
-	//sceneManager->setActiveScene(sceneManager->createDefaultScene()); // change to main menu scene when we get there.
+	physicsManager = new PhysicsManager();
+	sceneManager = new SceneManager(physicsManager);
 }
 
 
@@ -93,6 +91,7 @@ void GameManager::startGame()
 	// Start by initializing all the required scenes and any other game systems. 
 	// A scene is a collection of model instances and other game objects needed to render a specific game level or the main menu. 
 
+    // load and initialize the main menu scene and the default game scene.
 	sceneManager->initializeScenes(); // sceneManager->createDefaultScene();
 	//startRenderer();
 

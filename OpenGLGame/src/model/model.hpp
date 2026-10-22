@@ -8,7 +8,7 @@
 //#include <assimp/scene.h>
 
 #include "mesh/mesh.hpp"
-
+#include <reactphysics3d/reactphysics3d.h>
 #include <reactphysics3d/mathematics/Vector3.h>
 
 #include "../utils/Logger.hpp"
@@ -50,7 +50,7 @@ public:
 
     ModelData modelData;
 
-    // constructor, expects a filepath to a 3D model.
+    // constructor, expects a ModelData object.
     Model(ModelData _modelData)
     {
         // ToDo: make a typename for what type of model it is for simpler logic.
@@ -79,6 +79,7 @@ public:
 			this->modelData.modelName = _modelData.modelName;
 			this->modelName = _modelData.modelName;
             log("Done loading model data from ModelData object.");
+			loadSuccessful = true;
         }
     }
 

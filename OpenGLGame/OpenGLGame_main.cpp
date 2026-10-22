@@ -38,22 +38,6 @@ void endProg()
 // entry point
 int main()
 {
-    // DRAFT::
-    // 
-    // atexit();
-    // log();
-    // window.create();
-    // //regualrRenderer.create(window);
-    // //debugRenderer.create(window); // if debugRender is true.
-	// renderManager.create(window); // this will create the render manager, which will manage the regular and debug renderers, and it contains a render call that will use the appropriate renderer.
-    // 
-    // While shouldRender renderManager.render();
-    // 
-
-
-
-
-
     std::atexit(endProg);
     log("Starting OpenGL Game...");
     // create a window and openGL context
@@ -72,41 +56,7 @@ int main()
     gameManager->startGame();
     
 
-    // ToDO: I need to fix the physiscs update. 
-
-
-
-	//renderManager = new RenderManager(m_window);
-	//renderManager->create(m_window);
-
-	//renderManager = new RenderManager(m_window);
-	//renderManager->setDebugRender(debugRender);
-	//renderManager->render();
-
-	
-
-
-
-    // build a scene.
-	// what is a scene? a scene is a collection of models, lights, and other objects that make up the game world.
-    //m_window.createScene();
-    
-
-    // check if debuf rendering is on.
-   // if (debugRender) 
-   // {
-   //     if (debugRenderer == nullptr) 
-   //     {
-			//debugRenderer = new DebugRenderer();
-			//log("DebugRenderer created.");
-   //     }
-   //     // do rendering here
-   //     //return 0;
-   // }
-
-   // // start the main loop
-   // m_window->startRender();
-    // I feel like i should change this to be the renderer of choice is called here and the window is passed to the renderer. 
+    // ToDO: I need to fix the game/physiscs update. 
 
     return 0;
 }

@@ -117,6 +117,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Users\Herna\source\repos\OpenGLGame\3rdParty\includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +160,8 @@
     <ClCompile Include="src\stb_image_impl.cpp" />
     <ClCompile Include="src\rendering\DebugRenderer.cpp" />
     <ClCompile Include="src\utils\FileManager.cpp" />
+    <ClCompile Include="src\utils\game\GameSaver.cpp" />
+    <ClCompile Include="src\utils\game\SceneSaver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game\GameManager.hpp" />
@@ -178,6 +181,8 @@
     <ClInclude Include="src\stbimage\stbimp.h" />
     <ClInclude Include="src\rendering\DebugRenderer.hpp" />
     <ClInclude Include="src\utils\FileManager.hpp" />
+    <ClInclude Include="src\utils\game\GameSaver.hpp" />
+    <ClInclude Include="src\utils\game\SceneSaver.hpp" />
     <ClInclude Include="src\utils\Logger.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -48,7 +48,7 @@ namespace OpenGLGame
 		// creates a GLFW window and its OpenGL context, and sets up all the required OpenGL function pointers.
 		// Also creates the scene(s) and the shader program. Returns true if the window was created successfully, false otherwise.
 		bool create(const char* title, int width, int height);
-		bool createScene();
+		[[deprecated]]bool createScene();
 		// this function contains the main render loop.
 		//void startRender();
 		void destroy();

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include "../model/ModelInstance.hpp"
+#include "../physics/PhysicsManager.hpp"
 
 class Scene
 {
@@ -21,7 +22,7 @@ private:
 	
 
 public:
-	Scene();
+	Scene(rp3d::PhysicsWorld* _physicsWorld);
 	~Scene();
 	std::vector<ModelInstance::ModelInstance*>& getModels() { return models; }
 	rp3d::PhysicsWorld* physicsWorld = nullptr;
@@ -31,7 +32,7 @@ public:
 	//void update(const double dt);
 
 	// physics sim
-	void updatePhysicsWorld(const double timestep, rp3d::PhysicsWorld* world);
+	void updatePhysicsWorld(const double timestep, PhysicsManager* _physicsManager );
 	void updateModelsFromPhysicsWorld(rp3d::PhysicsWorld* world, float factor);
 
 	rp3d::PhysicsWorld* getPhysicsWorld() { return physicsWorld; }
