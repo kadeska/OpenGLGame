@@ -3,6 +3,12 @@
 #include <filesystem>
 #include "MeshData.hpp"
 
+enum class ModelType
+{
+	GROUND_PLANE,
+	CAT_MODEL
+};
+
 class ModelFactory
 {
 public:
@@ -10,6 +16,9 @@ public:
 	{
 		loadedModels = std::vector<Model*>();
 	}
+
+	
+
 private:
 
 	std::vector<Model*> loadedModels;
@@ -32,7 +41,7 @@ public:
 	// createModel function should take a name of the model, and find the model data folder with that name, 
     // and load the mesh data files from that folder to construct the model object.
 	//
-	Model* createModel(std::string const& modelFolderName, bool gamma = false);
+	Model* createModel(ModelType type, std::string const& modelFolderName, bool gamma = false);
 
 private:
 

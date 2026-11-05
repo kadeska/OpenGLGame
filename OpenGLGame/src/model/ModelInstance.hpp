@@ -51,7 +51,7 @@ namespace ModelInstance
 
 
 			// create a model object using our model factory, and set its position to the given position
-			model = factory.createModel(modelName);
+			model = factory.createModel(ModelType::CAT_MODEL, modelName);
             
             
             // check if the model was created succesfully.

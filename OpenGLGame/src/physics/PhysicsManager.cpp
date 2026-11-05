@@ -5,6 +5,8 @@
 //#include "PhysicsRigidBody.hpp"
 #include <reactphysics3d/mathematics/Transform.h>
 
+#include "../model/ModelInstance.hpp"
+
 #include "../utils/Logger.hpp"
 using namespace logger;
 
@@ -37,6 +39,11 @@ rp3d::PhysicsWorld* PhysicsManager::createPhysicsWorld()
 	world->enableSleeping(false);
 
 	return world;
+}
+
+void PhysicsManager::createRigidBodyForModelInstance(ModelInstance::ModelInstance* modelInstance, rp3d::PhysicsWorld* world)
+{
+	//world->
 }
 
 void PhysicsManager::updatePhysicsWorld(const double timestep, rp3d::PhysicsWorld* world)

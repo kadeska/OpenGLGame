@@ -27,7 +27,7 @@ void SceneManager::initializeScenes()
 
 Scene* SceneManager::createDefaultScene(rp3d::PhysicsWorld* _physicsWorld)
 {
-    Scene* scene = new Scene(_physicsWorld);
+    Scene* scene = new Scene(_physicsWorld, physicsManager);
     scene->physicsWorld = _physicsWorld;
     return scene;
 }

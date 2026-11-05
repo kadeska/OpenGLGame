@@ -77,8 +77,12 @@ bool ModelFactory::removeLoadedModelByIndex(int index)
 
 // -----------------------------------------
 // Main function to create a model object. Will return a model pointer. Warning: Pointer may be nullptr if loading was unsuccesfull. 
-Model* ModelFactory::createModel(std::string const& modelFolderName, bool gamma)
+Model* ModelFactory::createModel(ModelType type, std::string const& modelFolderName, bool gamma)
 {
+	// use model type
+
+
+
     //FileManager::saveDataToFileAtPath("testing",  + "appData/modelData/" + modelFolderName + "/", "test data");
 
 	folderName = modelFolderName;
@@ -145,6 +149,9 @@ bool ModelFactory::constructModelObjectFromDataFolder(std::string modelFolderNam
         modelPtr = new Model(modelData);
 		//modelPtr->loadSuccessful = true; // dont need this anymore, I set the bool after the models constructor finishes loading the data. 
 		modelPtr->setPtrIndex(ptrIndex++);
+
+		// i need to create a rigidbody for this model instance in the physics world.
+		// I need to use the physics manager.
 
         return true; // successfully loaded model data from data file
     }

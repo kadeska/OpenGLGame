@@ -15,12 +15,14 @@ rp3d::RigidBody* floorBody = nullptr;
 rp3d::Collider* floorCollider = nullptr;
 rp3d::BoxShape* floorShape = nullptr;
 
-Scene::Scene(rp3d::PhysicsWorld* _physicsWorld)
+Scene::Scene(rp3d::PhysicsWorld* _physicsWorld, PhysicsManager* _physicsManager, GameObjectManager* _gameObjectManager)
 {
 	//std::cout << "[Scene()] Creating scene..." << std::endl;
 	log("Scene() constructor", LogType::DEBUG);
 	log("Creating scene...");
 	physicsWorld = _physicsWorld;
+	physicsManagerPtr = _physicsManager;
+	gameObjectManager = _gameObjectManager;
 
 	//physicsManager = new PhysicsManager();
 
@@ -110,15 +112,20 @@ void Scene::populateScene()
 
 	// load save.
 
-	models.push_back(new ModelInstance::ModelInstance("cat", rp3d::Vector3(1.0f, 10.0f, 1.0f), glm::vec3(0.05f), /*physicsManager->getPhysicsWorldPtr(),*/ true));
+
+
+	//ModelInstance::ModelInstance* cat = new ModelInstance::ModelInstance("cat", rp3d::Vector3(1.0f, 10.0f, 1.0f), glm::vec3(0.05f), true);
+	//models.push_back(cat);
+
+	GameObjectCore* player = gameObjectManager->createGameObject(1, GameObjectType::PLAYER);
+
+	physicsManagerPtr->createRigidBodyForModelInstance(player->components.pointers.modelInstance, physicsWorld);
+
+
+
+
 	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(2.0f, 20.0f, 2.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
 	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(3.0f, 30.0f, 3.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(4.0f, 40.0f, 4.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(5.0f, 50.0f, 5.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(6.0f, 60.0f, 6.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(7.0f, 70.0f, 7.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(8.0f, 80.0f, 8.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
-	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(9.0f, 90.0f, 9.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
 	
 	
 	models.push_back(new ModelInstance::ModelInstance("floor", rp3d::Vector3(100.0f, 1.0f, 100.0f), glm::vec3(1.0f), /*physicsManager->getPhysicsWorldPtr(),*/ false));
@@ -127,16 +134,6 @@ void Scene::populateScene()
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(8.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
 
-	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(0.0f, 5.0f, 0.0f), glm::vec3(1.0f)));
-	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(1.0f)));
-
-	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 5.0f, 0.0f), glm::vec3(1.0f)));
-	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 10.0f, 0.0f), glm::vec3(1.0f)));
-
-	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(8.0f, 5.0f, 0.0f), glm::vec3(1.0f)));
-	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(8.0f, 10.0f, 0.0f), glm::vec3(1.0f)));
-
-	//physicsWorld->getWorld()->
 
 
 	// after the models are loaded create the rigid bodies for each model.
@@ -207,4 +204,9 @@ void Scene::updateModelsFromPhysicsWorld(rp3d::PhysicsWorld* world, float factor
 
 		modelInstance->position = world->getRigidBody(index)->getTransform().getPosition();
 	}
+}
+
+void Scene::registerModelInstanceRigidBody(ModelInstance::ModelInstance* modelInstance)
+{
+	
 }

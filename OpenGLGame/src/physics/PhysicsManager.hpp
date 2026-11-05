@@ -20,6 +20,8 @@ public:
     
 	rp3d::PhysicsWorld* createPhysicsWorld();
 
+	void createRigidBodyForModelInstance(ModelInstance::ModelInstance* modelInstance, rp3d::PhysicsWorld* world);
+
 	void updatePhysicsWorld(const double timestep, rp3d::PhysicsWorld* world);
 
 };

@@ -4,6 +4,7 @@
 #include <vector>
 #include "../model/ModelInstance.hpp"
 #include "../physics/PhysicsManager.hpp"
+#include "../game/gameObjects/GameObjectManager.hpp"
 
 class Scene
 {
@@ -15,14 +16,18 @@ private:
 
 	// ------------------------------
 
-
 	// this array is basically our "scene"
-	std::vector<ModelInstance::ModelInstance*> models;
+	//std::vector<ModelInstance::ModelInstance*> models;  // I dont need this anymore
+
+
+	GameObjectManager* gameObjectManager = nullptr;
+
+	PhysicsManager* physicsManagerPtr = nullptr;
 
 	
 
 public:
-	Scene(rp3d::PhysicsWorld* _physicsWorld);
+	Scene(rp3d::PhysicsWorld* _physicsWorld, PhysicsManager* _physicsManager, GameObjectManager* _gameObjectManager);
 	~Scene();
 	std::vector<ModelInstance::ModelInstance*>& getModels() { return models; }
 	rp3d::PhysicsWorld* physicsWorld = nullptr;
@@ -35,12 +40,15 @@ public:
 	void updatePhysicsWorld(const double timestep, PhysicsManager* _physicsManager );
 	void updateModelsFromPhysicsWorld(rp3d::PhysicsWorld* world, float factor);
 
-	rp3d::PhysicsWorld* getPhysicsWorld() { return physicsWorld; }
+	
 
 	// FLAGS getters -----------------------
 
+	rp3d::PhysicsWorld* getPhysicsWorld() { return physicsWorld; }
 	bool getIsGameScene() { return isGameScene; }
 
 	// -------------------------------------------
+
+	void registerModelInstanceRigidBody(ModelInstance::ModelInstance* modelInstance);
 };
 
