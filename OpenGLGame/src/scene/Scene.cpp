@@ -128,7 +128,7 @@ void Scene::populateScene()
 	//models.push_back(new ModelInstance::ModelInstance("cat", glm::vec3(3.0f, 30.0f, 3.0f), glm::vec3(0.05f), physicsManager->getPhysicsWorldPtr(), true));
 	
 	
-	models.push_back(new ModelInstance::ModelInstance("floor", rp3d::Vector3(100.0f, 1.0f, 100.0f), glm::vec3(1.0f), /*physicsManager->getPhysicsWorldPtr(),*/ false));
+	//models.push_back(new ModelInstance::ModelInstance("floor", rp3d::Vector3(100.0f, 1.0f, 100.0f), glm::vec3(1.0f), /*physicsManager->getPhysicsWorldPtr(),*/ false));
 
 	
 	//models.push_back(new ModelInstance::ModelInstance("res/obj/backpack/backpack.obj", glm::vec3(4.0f, 0.0f, 0.0f), glm::vec3(1.0f)));
@@ -176,33 +176,28 @@ void Scene::updatePhysicsWorld(const double timestep, PhysicsManager* _physicsMa
 	_physicsManager->updatePhysicsWorld(timestep, getPhysicsWorld());
 }
 
+// this function updates the game objects position from its rigid bodys position after the physics step. 
 void Scene::updateModelsFromPhysicsWorld(rp3d::PhysicsWorld* world, float factor)
 {
-	for (ModelInstance::ModelInstance* modelInstance : models) 
+	for (GameObjectCore* gameObject : gameObjectManager->getGameObjects()) 
 	{
-		int index = modelInstance->model->getPtrIndex();
-		rp3d::Transform prevTtransform = modelInstance->prevRigidBodyTransform;
+		//int index = gameObject->components.pointers.modelInstance-> modelInstance->model->getPtrIndex();
+		rp3d::Transform prevTtransform = gameObject->components.pointers.modelInstance->prevRigidBodyTransform;
 		
-		//---------------------- debug
-
-		if (index == -1) {
-			log("Invalid model index found.", LogType::ERROR);
-			continue;
-		}
-		log("Number of rigid bodies: " + std::to_string(world->getNbRigidBodies()), LogType::DEBUG);
-		if (world->getRigidBody(index) == nullptr) {
-			log("Invalid rigid body found for model index: " + std::to_string(index), LogType::ERROR);
-			continue;
-		}
-		//-----------------------------------
-
 
 		// This line crashes becausbe there are no rigid bodies in the world.
-		rp3d::Transform currTransform = world->getRigidBody(index)->getTransform(); // CRASH :: Index is -1 // CRASH :: Index is 0 ?? is the rigidbody valid?
+
+
+		// here lets just get the rigidbody pointer from the game object
+		// Remember that this must be done AFTER the physics step. 
+		rp3d::Transform currTransform = gameObject->components.pointers.modelInstance->rigidBody->getTransform(); // world->getRigidBody(index)->getTransform(); // CRASH :: Index is -1 // CRASH :: Index is 0 ?? is the rigidbody valid?
 
 		rp3d::Transform interpolatedTransform = rp3d::Transform::interpolateTransforms(prevTtransform, currTransform, factor);
 
-		modelInstance->position = world->getRigidBody(index)->getTransform().getPosition();
+		//modelInstance->position = world->getRigidBody(index)->getTransform().getPosition();
+
+		// now set the model instance position to be the interpolated position after the physics simulation.
+		gameObject->components.pointers.modelInstance->position = interpolatedTransform.getPosition();
 	}
 }
 

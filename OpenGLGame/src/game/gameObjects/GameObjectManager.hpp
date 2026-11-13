@@ -13,6 +13,8 @@
 // 
 class GameObjectManager
 {
+private:
+	ModelInstance::ModelInstance* modelInstance = nullptr;
 	std::vector<ModelInstance::ModelInstance*> modelInstances;
 	std::vector<GameObjectCore*> gameObjects;
 public:
@@ -23,23 +25,16 @@ public:
 
 	void removeGameObject(GameObjectCore* gameObject);
 
-	void testPrintGameObjectIDs()
-	{
-		std::for_each(gameObjects.begin(), gameObjects.end(),
-			[](GameObjectCore* obj) {
-				if (obj) obj->printID();
-			});
-	}
+	void testPrintGameObjectIDs();
 
 	// this function will create a new game object of the specified type and return a pointer to it.
 	// This function will add the pointer to an array
-	GameObjectCore* createGameObject(const int _objID, const GameObjectType _objType)
-	{
-		ModelInstance::ModelInstance* modelInstance = new ModelInstance::ModelInstance("default", rp3d::Vector3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f), true);
-		modelInstances.push_back(modelInstance);
-		GameObjectCore* newGameObject = new GameObjectCore(modelInstance);
-		addGameObject(newGameObject);
-		return newGameObject;
-	}
+	GameObjectCore* createGameObject(const int _objID, const GameObjectType _objType);
+
+	std::vector<GameObjectCore*>& getGameObjects() { return gameObjects; }
+
+private:
+	void createModelInstance(const int _objID, const GameObjectType _objType);
+	ModelInstance::ModelInstance* createModelInstance(const int _objID, const char* _modelName, const GameObjectType _objType);
 };
 

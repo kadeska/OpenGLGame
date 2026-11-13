@@ -12,6 +12,7 @@
 //#include <reactphysics3d/reactphysics3d.h>       
 
 #include "../utils/Logger.hpp"
+#include "../game/gameObjects/GameObjectCore.hpp"
 using namespace logger;
 
 static ModelFactory factory;
@@ -25,6 +26,9 @@ namespace ModelInstance
     // ModelInstance structure to hold model data, RigidBody if applicable, and transformation information
     struct ModelInstance
     {
+
+        const int ID;
+
         //ModelFactory modelFactory; // this needs to be moved outside the instance.
 
 		// This model pointer is for this specific instance of a model, and is created by the model factory.
@@ -43,8 +47,8 @@ namespace ModelInstance
         //MyRigidBody* rigidBody = nullptr;
 
         // Make sure to add the model instance to an array for indexing. 
-        ModelInstance(const char* modelName, rp3d::Vector3 pos, glm::vec3 scl = glm::vec3(1.0f), /*rp3d::PhysicsWorld* physicsWorldptr = nullptr,*/ bool isDynamic = false)
-            : position(pos), scale(scl), /*physicsWorldptr(physicsWorldptr),*/ isDynamic(isDynamic)
+        ModelInstance(const int _ID, const char* modelName, const GameObjectType _objType, rp3d::Vector3 pos, glm::vec3 scl = glm::vec3(1.0f), /*rp3d::PhysicsWorld* physicsWorldptr = nullptr,*/ bool isDynamic = false)
+            : position(pos), scale(scl), /*physicsWorldptr(physicsWorldptr),*/ isDynamic(isDynamic), ID(_ID)
         {
             
             //model = new Model(path); // path is given from Scene::populateScene()

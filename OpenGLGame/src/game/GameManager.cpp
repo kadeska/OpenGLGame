@@ -78,7 +78,7 @@ void GameManager::init(OpenGLGame::GlfwWindow* _window)
 	window = _window;
     // I dont want to have a global physics manager to allow each scene to have their own physics world.
 	//physicsManager = new PhysicsManager();
-	renderManager = new RenderManager(_window);
+	renderManager = new RenderManager(window);
 	physicsManager = new PhysicsManager();
 	sceneManager = new SceneManager(physicsManager);
 }
